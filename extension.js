@@ -5,7 +5,7 @@ let languageclient = require('vscode-languageclient');
 
 exports.activate = function activate(context) {
 	// The server is implemented in Rust
-	let serverCommand = "dm-langserver.exe";
+	let serverCommand = vscode.workspace.getConfiguration('dreammaker').get('langserverPath');
 	let serverArgs = [];
 	let serverOptions = { command: serverCommand, args: serverArgs };
 

@@ -25,6 +25,11 @@
 			"type": "object",
 			"title": "DreamMaker language client configuration",
 			"properties": {
+				"dreammaker.langserverPath": {
+					"type": "string",
+					"default": "dm-langserver",
+					"description": "Sets the path to the dm-langserver executable."
+				},
 				"dreammaker.maxProblems": {
 					"scope": "resource",
 					"type": "number",
