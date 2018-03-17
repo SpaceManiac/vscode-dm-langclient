@@ -4,6 +4,7 @@ import * as os from 'os';
 import * as fs from 'fs';
 import { workspace, window, ExtensionContext } from 'vscode';
 import * as languageclient from 'vscode-languageclient';
+import fetch from 'node-fetch';
 
 import { promisify, is_executable, md5_file } from './misc';
 
@@ -58,23 +59,26 @@ async function determine_server_command(context: ExtensionContext): Promise<stri
 	if (await is_executable(auto_file)) {
 		// If the executable is already valid, run it now, and update later.
 		auto_update(context, platform, arch, update_file, await md5_file(auto_file));
-		return auto_file;
 	} else {
 		// Otherwise, update now.
-		await auto_update(context, platform, arch, auto_file, null);
+		const failure = await auto_update(context, platform, arch, auto_file, null);
+		if (failure) {
+			return prompt_for_server_command(context, failure);
+		}
 	}
+	return auto_file;
 }
 
 async function prompt_for_server_command(context: ExtensionContext, message: string): Promise<string | undefined> {
 	// Show an info/confirmation before browsing...
 	const choice = await window.showInformationMessage(`The dm-langserver executable must be selected. ${message}`, "Browse", "Cancel");
 	if (choice === "Cancel") {
-		return undefined;
+		return;
 	}
 	// Browse for the executable...
 	const list = await window.showOpenDialog({});
 	if (!list) {
-		return undefined;
+		return;
 	}
 	/// And update the config.
 	const path = list[0].fsPath;
@@ -87,12 +91,34 @@ async function auto_update(context: ExtensionContext, platform: string, arch: st
 	if (hash) {
 		url += `&hash=${hash}`;
 	}
-	console.log(url);
-
-	// If hash provided, notify on success. Otherwise, notify on failure.
-	if (!hash) {
-		return await prompt_for_server_command(context, `Binaries are not available for ${arch}-${platform}.`);
-	} else {
-		return undefined;
+	let res;
+	try {
+		res = await fetch(url);
+	} catch (e) {
+		// network error
+		return `${e}.`;
+	}
+	switch (res.status) {
+		case 200:  // New version
+			let stream = fs.createWriteStream(out_file, { encoding: 'binary' });
+			res.body.pipe(stream);
+			await promisify(stream.once, stream)('finish');
+			if (hash) {
+				window.showInformationMessage("Updated dm-langserver, reload to activate.");
+			}
+			return;
+		case 204:  // Unmodified
+		case 304:
+			if (hash) {
+				return;
+			}
+			// if hash is not set, fallthrough
+		case 404:  // Not found
+			return `Binaries are not available for ${arch}-${platform}.`;
+		case 410:  // Endpoint removed
+			// TODO
+			return `Gone.`;
+		default:  // Error
+			return `Server returned ${res.status} ${res.statusText}.`;
 	}
 }
