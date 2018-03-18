@@ -36,6 +36,11 @@
 			"type": "object",
 			"title": "DreamMaker language client configuration",
 			"properties": {
+				"dreammaker.autoUpdate": {
+					"type": "boolean",
+					"default": null,
+					"description": "Enables or disables server auto-updates."
+				},
 				"dreammaker.langserverPath": {
 					"type": "string",
 					"default": null,

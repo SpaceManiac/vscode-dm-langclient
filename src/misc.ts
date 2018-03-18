@@ -49,3 +49,7 @@ export async function md5_file(path: string): Promise<string> {
 		return read.toString('hex');
 	}
 }
+
+export async function sleep(ms: number): Promise<void> {
+	await promisify((ms: number, f: (...args: any[]) => void) => setTimeout(f, ms))(ms);
+}

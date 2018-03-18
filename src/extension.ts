@@ -6,7 +6,7 @@ import { workspace, window, ExtensionContext } from 'vscode';
 import * as languageclient from 'vscode-languageclient';
 import fetch from 'node-fetch';
 
-import { promisify, is_executable, md5_file } from './misc';
+import { promisify, is_executable, md5_file, sleep } from './misc';
 
 export async function activate(context: ExtensionContext) {
 	await start_language_client(context);
@@ -63,8 +63,11 @@ async function determine_server_command(context: ExtensionContext): Promise<stri
 		// Otherwise, update now.
 		const failure = await auto_update(context, platform, arch, auto_file, null);
 		if (failure) {
-			return prompt_for_server_command(context, failure);
+			return await prompt_for_server_command(context, failure);
 		}
+		// Debounce to handle the file being busy if accessed by antivirus or
+		// similar immediately after download.
+		await sleep(500);
 	}
 	return auto_file;
 }
@@ -72,7 +75,7 @@ async function determine_server_command(context: ExtensionContext): Promise<stri
 async function prompt_for_server_command(context: ExtensionContext, message: string): Promise<string | undefined> {
 	// Show an info/confirmation before browsing...
 	const choice = await window.showInformationMessage(`The dm-langserver executable must be selected. ${message}`, "Browse", "Cancel");
-	if (choice === "Cancel") {
+	if (choice !== "Browse") {
 		return;
 	}
 	// Browse for the executable...
@@ -87,6 +90,24 @@ async function prompt_for_server_command(context: ExtensionContext, message: str
 }
 
 async function auto_update(context: ExtensionContext, platform: string, arch: string, out_file: string, hash: string | null): Promise<string | undefined> {
+	let enabled: boolean | undefined = workspace.getConfiguration('dreammaker').get('autoUpdate');
+	if (typeof enabled !== 'boolean') {
+		let choice = await window.showInformationMessage("Auto-updates are available for dm-langserver. Would you like to enable them?", "Yes", "Just Once", "No");
+		if (choice === "Yes") {
+			enabled = true;
+			workspace.getConfiguration('dreammaker').update('autoUpdate', true, true);
+		} else if (choice === "Just Once") {
+			enabled = true;
+			workspace.getConfiguration('dreammaker').update('autoUpdate', false, true);
+		} else if (choice === "No") {
+			enabled = false;
+			workspace.getConfiguration('dreammaker').update('autoUpdate', false, true);
+		}
+	}
+	if (!enabled) {
+		return "Auto-update disabled.";
+	}
+
 	let url = `https://wombat.platymuus.com/ss13/dm-langserver/update.php?platform=${platform}&arch=${arch}`;
 	if (hash) {
 		url += `&hash=${hash}`;
@@ -100,7 +121,7 @@ async function auto_update(context: ExtensionContext, platform: string, arch: st
 	}
 	switch (res.status) {
 		case 200:  // New version
-			let stream = fs.createWriteStream(out_file, { encoding: 'binary' });
+			let stream = fs.createWriteStream(out_file, { encoding: 'binary', mode: 0o755 });
 			res.body.pipe(stream);
 			await promisify(stream.once, stream)('finish');
 			if (hash) {
@@ -116,8 +137,8 @@ async function auto_update(context: ExtensionContext, platform: string, arch: st
 		case 404:  // Not found
 			return `Binaries are not available for ${arch}-${platform}.`;
 		case 410:  // Endpoint removed
-			// TODO
-			return `Gone.`;
+			workspace.getConfiguration('dreammaker').update('autoUpdate', false, true);
+			return "Update endpoint removed, try updating the extension.";
 		default:  // Error
 			return `Server returned ${res.status} ${res.statusText}.`;
 	}
