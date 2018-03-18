@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import { workspace, window, ExtensionContext } from 'vscode';
 import * as languageclient from 'vscode-languageclient';
 import fetch from 'node-fetch';
+import * as mkdirp from 'mkdirp';
 
 import { promisify, is_executable, md5_file, sleep } from './misc';
 
@@ -61,6 +62,7 @@ async function determine_server_command(context: ExtensionContext): Promise<stri
 		auto_update(context, platform, arch, update_file, await md5_file(auto_file));
 	} else {
 		// Otherwise, update now.
+		await promisify(mkdirp)(`${context.extensionPath}/bin/`);
 		const failure = await auto_update(context, platform, arch, auto_file, null);
 		if (failure) {
 			return await prompt_for_server_command(context, failure);
