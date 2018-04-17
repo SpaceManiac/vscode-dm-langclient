@@ -2,7 +2,7 @@
 
 import * as os from 'os';
 import * as fs from 'fs';
-import { workspace, window, ExtensionContext } from 'vscode';
+import { workspace, window, ExtensionContext, StatusBarItem, StatusBarAlignment } from 'vscode';
 import * as languageclient from 'vscode-languageclient';
 import fetch from 'node-fetch';
 import * as mkdirp from 'mkdirp';
@@ -10,10 +10,14 @@ import * as mkdirp from 'mkdirp';
 import { promisify, is_executable, md5_file, sleep } from './misc';
 
 export async function activate(context: ExtensionContext) {
+	status = window.createStatusBarItem(StatusBarAlignment.Left, 10);
+	status.text = "DM: starting";
+	status.show();
 	await start_language_client(context);
 }
 
 let lc: languageclient.LanguageClient;
+let status: StatusBarItem;
 
 async function start_language_client(context: ExtensionContext) {
 	let command = await determine_server_command(context);
@@ -35,6 +39,32 @@ async function start_language_client(context: ExtensionContext) {
 
 	lc = new languageclient.LanguageClient('dm-langserver', "DreamMaker Language Server", serverOptions, clientOptions);
 	context.subscriptions.push(lc.start());
+	progress_counter();
+}
+
+async function progress_counter() {
+	let environment = "DM";
+
+	await lc.onReady();
+	lc.onNotification(new languageclient.NotificationType("$window/status"), function (message: any) {
+		if (message.environment) {
+			environment = message.environment;
+		}
+		let tasks: string[] = message.tasks || [];
+
+		if (tasks.length == 0) {
+			status.text = `${environment}`;
+			status.tooltip = undefined;
+		} else if (tasks.length == 1) {
+			tasks.forEach(element => {
+				status.text = `${environment}: ${element}`;
+				status.tooltip = undefined;
+			});
+		} else {
+			status.text = `${environment}: ${tasks.length} tasks...`;
+			status.tooltip = tasks.join("\n");
+		}
+	});
 }
 
 async function determine_server_command(context: ExtensionContext): Promise<string | undefined> {
