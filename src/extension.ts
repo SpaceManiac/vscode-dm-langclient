@@ -12,6 +12,7 @@ import * as extras from './extras';
 
 let lc: languageclient.LanguageClient;
 let status: StatusBarItem;
+let update_available: boolean = false;
 
 export async function activate(context: ExtensionContext) {
 	// prepare the status bar
@@ -23,6 +24,7 @@ export async function activate(context: ExtensionContext) {
 	// register commands
 	context.subscriptions.push(commands.registerCommand('dreammaker.restartLangserver', async () => {
 		status.text = "DM: restarting";
+		update_available = false;
 		await lc.stop();
 		return start_language_client_catch(context);
 	}));
@@ -85,15 +87,21 @@ async function progress_counter() {
 			status.text = `${environment}: ${tasks.length} tasks...`;
 			status.tooltip = tasks.join("\n");
 		}
+		if (update_available) {
+			status.text += ' - click to update';
+		}
 	});
 }
 
 async function determine_server_command(context: ExtensionContext): Promise<string | undefined> {
-	// If the config override is set, use that, and don't autoupdate
-	const serverCommand: string | undefined = workspace.getConfiguration('dreammaker').get('langserverPath');
-	if (serverCommand) {
-		if (await is_executable(serverCommand)) {
-			return serverCommand;
+	// If the config override is set, use that, and don't autoupdate.
+	const server_command: string | undefined = workspace.getConfiguration('dreammaker').get('langserverPath');
+	if (server_command) {
+		// ".update" files are still supported here to allow easy updating of
+		// local builds.
+		await update_copy(server_command, `${server_command}.update`);
+		if (await is_executable(server_command)) {
+			return server_command;
 		} else {
 			return await prompt_for_server_command(context, "Configured executable is missing or invalid.");
 		}
@@ -104,9 +112,7 @@ async function determine_server_command(context: ExtensionContext): Promise<stri
 	const extension = (platform == 'win32') ? ".exe" : "";
 	const auto_file = `${context.extensionPath}/bin/dm-langserver-${arch}-${platform}${extension}`;
 	const update_file = `${auto_file}.update`;
-	if (await is_executable(`${auto_file}.update`)) {
-		await promisify(fs.rename)(update_file, auto_file);
-	}
+	await update_copy(auto_file, update_file);
 
 	if (await is_executable(auto_file)) {
 		// If the executable is already valid, run it now, and update later.
@@ -123,6 +129,23 @@ async function determine_server_command(context: ExtensionContext): Promise<stri
 		await sleep(500);
 	}
 	return auto_file;
+}
+
+async function update_copy(main_file: string, update_file: string) {
+	for (let i = 0; i < 8; ++i) {
+		if (!await is_executable(update_file)) {
+			return;
+		}
+		try {
+			await promisify(fs.rename)(update_file, main_file);
+			return;
+		} catch(e) {}
+		// If this fails, it might be because the old process is still
+		// running in this window. Wait a bit and try again.
+		await sleep(250);
+	}
+	// Last chance, and if it really fails, propagate that up.
+	await promisify(fs.rename)(update_file, main_file);
 }
 
 async function prompt_for_server_command(context: ExtensionContext, message: string): Promise<string | undefined> {
@@ -177,8 +200,9 @@ async function auto_update(context: ExtensionContext, platform: string, arch: st
 			let stream = fs.createWriteStream(out_file, { encoding: 'binary', mode: 0o755 });
 			res.body.pipe(stream);
 			await promisify(stream.once, stream)('finish');
-			if (hash) {
-				window.showInformationMessage("Updated dm-langserver, reload to activate.");
+			if (hash && !update_available) {
+				update_available = true;
+				status.text += ' - click to update';
 			}
 			return;
 		case 204:  // Unmodified
