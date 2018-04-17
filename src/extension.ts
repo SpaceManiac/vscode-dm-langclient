@@ -8,6 +8,7 @@ import fetch from 'node-fetch';
 import * as mkdirp from 'mkdirp';
 
 import { promisify, is_executable, md5_file, sleep } from './misc';
+import * as extras from './extras';
 
 export async function activate(context: ExtensionContext) {
 	status = window.createStatusBarItem(StatusBarAlignment.Left, 10);
@@ -46,7 +47,7 @@ async function progress_counter() {
 	let environment = "DM";
 
 	await lc.onReady();
-	lc.onNotification(new languageclient.NotificationType("$window/status"), function (message: any) {
+	lc.onNotification(extras.WindowStatus, message => {
 		if (message.environment) {
 			environment = message.environment;
 		}
