@@ -2,7 +2,7 @@
 
 import * as os from 'os';
 import * as fs from 'fs';
-import { workspace, window, ExtensionContext, StatusBarItem, StatusBarAlignment } from 'vscode';
+import { workspace, window, commands, ExtensionContext, StatusBarItem, StatusBarAlignment } from 'vscode';
 import * as languageclient from 'vscode-languageclient';
 import fetch from 'node-fetch';
 import * as mkdirp from 'mkdirp';
@@ -10,15 +10,35 @@ import * as mkdirp from 'mkdirp';
 import { promisify, is_executable, md5_file, sleep } from './misc';
 import * as extras from './extras';
 
-export async function activate(context: ExtensionContext) {
-	status = window.createStatusBarItem(StatusBarAlignment.Left, 10);
-	status.text = "DM: starting";
-	status.show();
-	await start_language_client(context);
-}
-
 let lc: languageclient.LanguageClient;
 let status: StatusBarItem;
+
+export async function activate(context: ExtensionContext) {
+	// prepare the status bar
+	status = window.createStatusBarItem(StatusBarAlignment.Left, 10);
+	status.text = "DM: starting";
+	status.command = 'dreammaker.restartLangserver';
+	status.show();
+
+	// register commands
+	context.subscriptions.push(commands.registerCommand('dreammaker.restartLangserver', async () => {
+		status.text = "DM: restarting";
+		await lc.stop();
+		return start_language_client_catch(context);
+	}));
+
+	// start the language client
+	await start_language_client_catch(context);
+}
+
+async function start_language_client_catch(context: ExtensionContext) {
+	try {
+		await start_language_client(context);
+	} catch (e) {
+		status.text = "DM: crashed";
+		console.log(e);
+	}
+}
 
 async function start_language_client(context: ExtensionContext) {
 	let command = await determine_server_command(context);

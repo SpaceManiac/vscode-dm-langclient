@@ -32,6 +32,13 @@
 				]
 			}
 		],
+		"commands": [
+			{
+				"command": "dreammaker.restartLangserver",
+				"title": "Restart language server",
+				"category": "DreamMaker"
+			}
+		],
 		"configuration": {
 			"type": "object",
 			"title": "DreamMaker language client configuration",
