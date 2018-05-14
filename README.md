@@ -7,7 +7,7 @@ It is currently best used in tandem with the [BYOND DM Language Support]
 extension, which provides syntax highlighting.
 
 [ls]: https://github.com/SpaceManiac/SpacemanDMM/tree/master/src/langserver
-[SpacemanDMM]: https://gihub.com/SpaceManiac/SpacemanDMM/
+[SpacemanDMM]: https://github.com/SpaceManiac/SpacemanDMM/
 [Byond]: https://secure.byond.com/
 [BYOND DM Language Support]: https://marketplace.visualstudio.com/items?itemName=gbasood.byond-dm-language-support
 
