@@ -71,15 +71,15 @@
 	},
 	"dependencies": {
 		"mkdirp": "^0.5.1",
-		"node-fetch": "^2.1.1",
-		"vscode": "^1.1.13",
+		"node-fetch": "^2.1.2",
+		"vscode": "^1.1.17",
 		"vscode-languageclient": "^3.5.1"
 	},
 	"devDependencies": {
-		"typescript": "^2.6.1",
-		"tslint": "^5.8.0",
-		"@types/node": "^7.0.43",
-		"@types/node-fetch": "^1.6.7",
-		"@types/mkdirp": "^0.5.2"
+		"@types/mkdirp": "^0.5.2",
+		"@types/node": "^7.0.64",
+		"@types/node-fetch": "^1.6.9",
+		"tslint": "^5.10.0",
+		"typescript": "^2.8.3"
 	}
 }
