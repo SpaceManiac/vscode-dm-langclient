@@ -1,25 +1,36 @@
+// Main module for dm-langclient extension.
 'use strict';
 
 import * as os from 'os';
 import * as fs from 'fs';
-import { workspace, window, commands, ExtensionContext, StatusBarItem, StatusBarAlignment } from 'vscode';
+import { workspace, window, commands, ExtensionContext, StatusBarItem, StatusBarAlignment, Uri, TextEditor } from 'vscode';
 import * as languageclient from 'vscode-languageclient';
 import fetch from 'node-fetch';
 import * as mkdirp from 'mkdirp';
+import * as path from 'path';
 
 import { promisify, is_executable, md5_file, sleep } from './misc';
 import * as extras from './extras';
+import * as environment from './environment';
 
 let lc: languageclient.LanguageClient;
 let status: StatusBarItem;
+let ticked_status: StatusBarItem;
 let update_available: boolean = false;
+let environment_file: string | null = null;
 
+// Entry point.
 export async function activate(context: ExtensionContext) {
 	// prepare the status bar
 	status = window.createStatusBarItem(StatusBarAlignment.Left, 10);
 	status.text = "DM: starting";
 	status.command = 'dreammaker.restartLangserver';
 	status.show();
+
+	ticked_status = window.createStatusBarItem(StatusBarAlignment.Right, 100);
+	ticked_status.command = 'dreammaker.toggleTicked';
+	window.onDidChangeActiveTextEditor(update_ticked_status);
+	update_ticked_status();
 
 	// register commands
 	context.subscriptions.push(commands.registerCommand('dreammaker.restartLangserver', async () => {
@@ -28,9 +39,66 @@ export async function activate(context: ExtensionContext) {
 		await lc.stop();
 		return start_language_client_catch(context);
 	}));
+	context.subscriptions.push(commands.registerCommand('dreammaker.toggleTicked', async () => {
+		if (!window.activeTextEditor) {
+			return;
+		}
+		let document = window.activeTextEditor.document;
+
+		let discovered = environment_uri(document.uri);
+		if (!discovered) {
+			return;
+		}
+
+		let [uri, relative] = discovered;
+		if (!environment.is_tickable(relative)) {
+			return;
+		}
+		let edit = await environment.toggle_ticked(uri, relative);
+		if (await workspace.applyEdit(edit)) {
+			await update_ticked_status();
+		} else {
+			window.showErrorMessage("Editing .dme file failed");
+		}
+	}));
 
 	// start the language client
 	await start_language_client_catch(context);
+}
+
+async function update_ticked_status(editor?: TextEditor | undefined) {
+	let ticked = undefined;
+	if (!editor) {
+		editor = window.activeTextEditor;
+	}
+	if (editor) {
+		let discovered = environment_uri(editor.document.uri);
+		if (discovered) {
+			let [uri, relative] = discovered;
+			ticked = await environment.is_ticked(uri, relative);
+		}
+	}
+
+	if (typeof ticked === 'undefined') {
+		ticked_status.hide();
+	} else {
+		ticked_status.text = ticked ? "Ticked" : "Unticked";
+		ticked_status.show();
+	}
+}
+
+function environment_uri(of: Uri): [Uri, string] | undefined {
+	let root = workspace.getWorkspaceFolder(of);
+	if (!root || root.uri.scheme !== 'file' || !environment_file) {
+		return;
+	}
+
+	let relative = workspace.asRelativePath(of, false);
+	if (!relative || relative == of.fsPath) {
+		return;
+	}
+
+	return [Uri.file(path.join(root.uri.fsPath, environment_file)), relative];
 }
 
 async function start_language_client_catch(context: ExtensionContext) {
@@ -72,6 +140,8 @@ async function progress_counter() {
 	lc.onNotification(extras.WindowStatus, message => {
 		if (message.environment) {
 			environment = message.environment;
+			environment_file = `${environment}.dme`;
+			update_ticked_status();
 		}
 		let tasks: string[] = message.tasks || [];
 

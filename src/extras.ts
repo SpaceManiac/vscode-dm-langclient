@@ -1,3 +1,4 @@
+// Nonstandard extensions to the LSP used by dm-langserver.
 'use strict';
 
 import { NotificationType } from 'vscode-languageclient';

@@ -14,7 +14,7 @@
 		"vscode": "^1.19.0"
 	},
 	"categories": [
-		"Languages",
+		"Programming Languages",
 		"Other"
 	],
 	"activationEvents": [
@@ -36,6 +36,11 @@
 			{
 				"command": "dreammaker.restartLangserver",
 				"title": "Restart language server",
+				"category": "DreamMaker"
+			},
+			{
+				"command": "dreammaker.toggleTicked",
+				"title": "Toggle whether this file is ticked",
 				"category": "DreamMaker"
 			}
 		],
