@@ -36,7 +36,9 @@ export async function activate(context: ExtensionContext) {
 	context.subscriptions.push(commands.registerCommand('dreammaker.restartLangserver', async () => {
 		status.text = "DM: restarting";
 		update_available = false;
-		await lc.stop();
+		try {
+			await lc.stop();
+		} catch(_) {}
 		return start_language_client_catch(context);
 	}));
 	context.subscriptions.push(commands.registerCommand('dreammaker.toggleTicked', async () => {
