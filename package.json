@@ -11,7 +11,7 @@
 		"url": "https://github.com/SpaceManiac/SpacemanDMM/"
 	},
 	"engines": {
-		"vscode": "^1.19.0"
+		"vscode": "^1.23.0"
 	},
 	"categories": [
 		"Programming Languages",
@@ -40,7 +40,12 @@
 			},
 			{
 				"command": "dreammaker.toggleTicked",
-				"title": "Toggle whether this file is ticked",
+				"title": "Toggle Tick",
+				"category": "DreamMaker"
+			},
+			{
+				"command": "dreammaker.openReference",
+				"title": "Open DM Reference",
 				"category": "DreamMaker"
 			}
 		],
@@ -63,6 +68,11 @@
 					"type": "number",
 					"default": 100,
 					"description": "Controls the maximum number of problems produced by the server."
+				},
+				"dreammaker.byondPath": {
+					"type": "string",
+					"default": null,
+					"description": "Sets the path to the BYOND installation."
 				}
 			}
 		}

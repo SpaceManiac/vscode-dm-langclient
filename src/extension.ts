@@ -12,12 +12,14 @@ import * as path from 'path';
 import { promisify, is_executable, md5_file, sleep } from './misc';
 import * as extras from './extras';
 import * as environment from './environment';
+import * as reference from './reference';
 
 let lc: languageclient.LanguageClient;
 let status: StatusBarItem;
 let ticked_status: StatusBarItem;
 let update_available: boolean = false;
 let environment_file: string | null = null;
+let docs_provider: reference.Provider;
 
 // Entry point.
 export async function activate(context: ExtensionContext) {
@@ -29,7 +31,7 @@ export async function activate(context: ExtensionContext) {
 
 	ticked_status = window.createStatusBarItem(StatusBarAlignment.Right, 100);
 	ticked_status.command = 'dreammaker.toggleTicked';
-	window.onDidChangeActiveTextEditor(update_ticked_status);
+	context.subscriptions.push(window.onDidChangeActiveTextEditor(update_ticked_status));
 	update_ticked_status();
 
 	// register commands
@@ -63,6 +65,14 @@ export async function activate(context: ExtensionContext) {
 			window.showErrorMessage("Editing .dme file failed");
 		}
 	}));
+	context.subscriptions.push(commands.registerCommand('dreammaker.openReference', async (dm_path: string) => {
+		return docs_provider.open_reference(dm_path);
+	}));
+
+	// register the docs provider
+	docs_provider = new reference.Provider();
+	context.subscriptions.push(workspace.registerTextDocumentContentProvider(docs_provider.scheme, docs_provider));
+	context.subscriptions.push(window.onDidChangeActiveTextEditor((ed) => docs_provider.check_kill_ed(ed)));
 
 	// start the language client
 	await start_language_client_catch(context);

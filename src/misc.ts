@@ -14,7 +14,7 @@ export function promisify(func: Function, this_: any = undefined): Function {
 						reject = null;
 					}
 				} else {
-					resolve.apply(undefined, Array.prototype.slice.call(rest, 1));
+					resolve.apply(undefined, rest);
 				}
 			});
 			try {
@@ -54,3 +54,5 @@ export async function md5_file(path: string): Promise<string> {
 export async function sleep(ms: number): Promise<void> {
 	await promisify((ms: number, f: (...args: any[]) => void) => setTimeout(f, ms))(ms);
 }
+
+export const readFile = promisify(fs.readFile);
