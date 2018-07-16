@@ -38,7 +38,11 @@ export async function byond_path(): Promise<string | undefined> {
 
     // Attempt to find BYOND in its stock location.
     if (!directory && os.platform() === 'win32') {
-        directory = "C:/Program Files (x86)/BYOND";
+        if (await exists("C:/Program Files (x86)/BYOND")) {
+            directory = "C:/Program Files (x86)/BYOND";
+        } else if (await exists("C:/Program Files/BYOND")) {
+            directory = "C:/Program Files/BYOND";
+        }
     }
 
     // Loop until the user finds or cancels
