@@ -18,7 +18,15 @@ binaries available for common platforms. On other platforms, the path to the
 Language server features include:
 
 * Workspace symbol search (Ctrl+T).
+* Hovering `var` and `proc` definitions to see their parents.
 * And more, with details at the [language server documentation][ls].
+
+Additional extension features include:
+
+* Status bar control to toggle a file's tickmark in the `.dme`.
+* Built-in DM Reference browser.
+  * Open index with "DreamMaker: Open DM Reference" in the command palette.
+  * Look up items with workspace symbol search (Ctrl+T).
 
 ## License
 
