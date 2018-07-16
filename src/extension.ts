@@ -13,6 +13,7 @@ import { promisify, is_executable, md5_file, sleep } from './misc';
 import * as extras from './extras';
 import * as environment from './environment';
 import * as reference from './reference';
+import * as config from './config';
 
 let lc: languageclient.LanguageClient;
 let status: StatusBarItem;
@@ -248,21 +249,7 @@ async function prompt_for_server_command(context: ExtensionContext, message: str
 }
 
 async function auto_update(context: ExtensionContext, platform: string, arch: string, out_file: string, hash: string | null): Promise<string | undefined> {
-	let enabled: boolean | undefined = workspace.getConfiguration('dreammaker').get('autoUpdate');
-	if (typeof enabled !== 'boolean') {
-		let choice = await window.showInformationMessage("Auto-updates are available for dm-langserver. Would you like to enable them?", "Yes", "Just Once", "No");
-		if (choice === "Yes") {
-			enabled = true;
-			workspace.getConfiguration('dreammaker').update('autoUpdate', true, true);
-		} else if (choice === "Just Once") {
-			enabled = true;
-			workspace.getConfiguration('dreammaker').update('autoUpdate', false, true);
-		} else if (choice === "No") {
-			enabled = false;
-			workspace.getConfiguration('dreammaker').update('autoUpdate', false, true);
-		}
-	}
-	if (!enabled) {
+	if (!await config.auto_update()) {
 		return "Auto-update disabled.";
 	}
 

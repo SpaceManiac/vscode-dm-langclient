@@ -1,9 +1,10 @@
 // File system provider which serves HTML excerpts from the BYOND reference.
 'use strict';
 
-import { Uri, TextDocumentContentProvider, workspace, commands, ViewColumn, TextEditor } from "vscode";
+import { Uri, TextDocumentContentProvider, commands, ViewColumn, TextEditor } from "vscode";
 import { CancellationToken, Emitter } from "vscode-jsonrpc";
 import { readFile } from "./misc";
+import * as config from './config';
 
 const AUTHORITY = "singlepage";
 
@@ -19,7 +20,7 @@ export class Provider implements TextDocumentContentProvider {
     public async open_reference(dm_path?: string) {
         this.last_dm_path = dm_path;
         this.change_emitter.fire(this.singlepage_uri);
-		return commands.executeCommand("vscode.previewHtml", this.singlepage_uri, ViewColumn.Two, "DM Reference");
+        return commands.executeCommand("vscode.previewHtml", this.singlepage_uri, ViewColumn.Two, "DM Reference");
     }
 
     async provideTextDocumentContent(uri: Uri, token: CancellationToken): Promise<string | undefined> {
@@ -47,10 +48,11 @@ export class Provider implements TextDocumentContentProvider {
 
     private async provideSinglePage(): Promise<string> {
         // Read the reference HTML
-        const directory: string | undefined = workspace.getConfiguration('dreammaker').get('byondPath');
+        const directory: string | undefined = await config.byond_path();
         if (!directory) {
             return "You must <a href='command:workbench.action.openSettings'>configure</a> <tt>dreammaker.byondPath</tt> to use the pop-up reference.";
         }
+
         let body;
         let dm_path = this.last_dm_path && this.last_dm_path.replace(/>/g, "&gt;").replace(/</g, "&lt;");
         if (dm_path) {
@@ -83,6 +85,7 @@ export class Provider implements TextDocumentContentProvider {
             let contents = await readFile(fname, {encoding: 'latin1'});
             body = contents.slice(contents.indexOf("<dl>")).toString();
         }
+
         // Replace all links with commands which will update the HTML preview
         body = body.replace(/(href=)(?:info\.html)?("?)#(\/[^">]+)/g, (_: any, p1: string, p2: string, dm_path: string) =>
             `${p1}${p2}command:dreammaker.openReference?${encodeURI(JSON.stringify(dm_path))}`);

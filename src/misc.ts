@@ -56,3 +56,9 @@ export async function sleep(ms: number): Promise<void> {
 }
 
 export const readFile = promisify(fs.readFile);
+
+export async function exists(path: string): Promise<boolean> {
+	return new Promise((resolve: (b: boolean) => any, _reject: any) => {
+		fs.exists(path, resolve);
+	});
+}
