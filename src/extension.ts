@@ -48,22 +48,10 @@ export async function activate(context: ExtensionContext) {
 		if (!window.activeTextEditor) {
 			return;
 		}
-		let document = window.activeTextEditor.document;
-
-		let discovered = environment_uri(document.uri);
-		if (!discovered) {
-			return;
-		}
-
-		let [uri, relative] = discovered;
-		if (!environment.is_tickable(relative)) {
-			return;
-		}
-		let edit = await environment.toggle_ticked(uri, relative);
-		if (await workspace.applyEdit(edit)) {
+		if (await toggle_ticked(window.activeTextEditor.document.uri)) {
 			await update_ticked_status();
 		} else {
-			window.showErrorMessage("Editing .dme file failed");
+			await window.showErrorMessage("Editing .dme file failed");
 		}
 	}));
 	context.subscriptions.push(commands.registerCommand('dreammaker.openReference', async (dm_path: string) => {
@@ -74,6 +62,19 @@ export async function activate(context: ExtensionContext) {
 	docs_provider = new reference.Provider();
 	context.subscriptions.push(workspace.registerTextDocumentContentProvider(docs_provider.scheme, docs_provider));
 	context.subscriptions.push(window.onDidChangeActiveTextEditor((ed) => docs_provider.check_kill_ed(ed)));
+
+	// create the file system watcher for ticking created/unticking deleted files
+	let watcher = workspace.createFileSystemWatcher(environment.TICKABLE_GLOB, false, true, false);
+	watcher.onDidDelete(async (file_uri) => {
+		await toggle_ticked(file_uri, false);
+	});
+	watcher.onDidCreate(async (file_uri) => {
+		if (await config.tick_on_create()) {
+			await toggle_ticked(file_uri, true);
+			await update_ticked_status();
+		}
+	});
+	context.subscriptions.push(watcher);
 
 	// start the language client
 	await start_language_client_catch(context);
@@ -112,6 +113,28 @@ function environment_uri(of: Uri): [Uri, string] | undefined {
 	}
 
 	return [Uri.file(path.join(root.uri.fsPath, environment_file)), relative];
+}
+
+async function toggle_ticked(file_uri: Uri, state?: boolean | undefined): Promise<boolean | undefined> {
+	if (!file_uri) {
+		return;
+	}
+
+	let discovered = environment_uri(file_uri);
+	if (!discovered) {
+		return;
+	}
+
+	let [uri, relative] = discovered;
+	if (!environment.is_tickable(relative)) {
+		return;
+	}
+
+	let edit = await environment.toggle_ticked(uri, relative, state);
+	if (!edit) {
+		return;
+	}
+	return workspace.applyEdit(edit);
 }
 
 async function start_language_client_catch(context: ExtensionContext) {

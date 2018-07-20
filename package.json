@@ -73,6 +73,11 @@
 					"type": "string",
 					"default": null,
 					"description": "Sets the path to the BYOND installation."
+				},
+				"dreammaker.tickOnCreate": {
+					"type": "boolean",
+					"default": null,
+					"description": "Automatically ticks newly created code files if set."
 				}
 			}
 		}

@@ -7,8 +7,10 @@ import { workspace, WorkspaceEdit, Uri, Position, Range } from 'vscode';
 import * as readline from 'readline';
 import { promisify } from './misc';
 
+export const TICKABLE_GLOB: string = "**/*.{dm,dmm,dmf,dms}";
+
 export function is_tickable(include: string): boolean {
-    return include.endsWith(".dm") || include.endsWith(".dmm") || include.endsWith(".dmf");
+    return include.endsWith(".dm") || include.endsWith(".dmm") || include.endsWith(".dmf") || include.endsWith(".dms");
 }
 
 export async function is_ticked(uri: Uri, include: string): Promise<boolean | undefined> {
@@ -27,7 +29,7 @@ export async function is_ticked(uri: Uri, include: string): Promise<boolean | un
     return false;
 }
 
-export async function toggle_ticked(environment_uri: Uri, include: string): Promise<WorkspaceEdit> {
+export async function toggle_ticked(environment_uri: Uri, include: string, state?: boolean | undefined): Promise<WorkspaceEdit | null> {
     // parse the environment
     let env = await EnvironmentFile.from_uri(environment_uri);
     include = include.replace("/", "\\");
@@ -37,12 +39,18 @@ export async function toggle_ticked(environment_uri: Uri, include: string): Prom
     let line = env.header.length;
     for (let file of env.includes) {
         if (file == include) {
+            if (state === true) {  // keep the file even if it's already ticked
+                return null;
+            }
             edit.delete(environment_uri, new Range(line, 0, line + 1, 0));
             return edit;
         } else if (sort_less(include, file)) {
             break;
         }
         ++line;
+    }
+    if (state === false) {  // don't add the file if it's already not there
+        return null;
     }
     edit.insert(environment_uri, new Position(line, 0), `${EnvironmentFile.PREFIX}${include}${EnvironmentFile.SUFFIX}\n`);
     return edit;
@@ -55,7 +63,7 @@ function sort_less(a: string, b: string) {
         if (i == parts_a.length - 1 && i == parts_b.length - 1) {
             // files in the same directory sort by their extension first
             let bits_a = part_a.split("."), bits_b = part_b.split(".");
-            let ext_a = bits_a[bits_a.length - 1].toLowerCase(), ext_b = bits_b[bits_b.length - 1].toLowerCase();
+            let ext_a = bits_a[bits_a.length - 1], ext_b = bits_b[bits_b.length - 1];
             if (ext_a != ext_b) {
                 return ext_a < ext_b;
             }

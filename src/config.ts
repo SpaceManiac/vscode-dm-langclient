@@ -79,3 +79,22 @@ export async function byond_path(): Promise<string | undefined> {
     workspace.getConfiguration('dreammaker').update('byondPath', directory, true);
     return directory;
 }
+
+export async function tick_on_create(): Promise<boolean> {
+    let enabled: boolean | undefined = workspace.getConfiguration('dreammaker').get('tickOnCreate');
+    if (typeof enabled === 'boolean') {
+        return enabled;
+    }
+    let choice = await window.showInformationMessage("Would you like to tick newly-created code files?", "Once", "Always", "Never");
+    if (choice === "Always") {
+        workspace.getConfiguration('dreammaker').update('tickOnCreate', true, true);
+        return true;
+    } else if (choice === "Once") {
+        return true;
+    } else if (choice === "Never") {
+        workspace.getConfiguration('dreammaker').update('tickOnCreate', false, true);
+        return false;
+    } else {
+        return false;
+    }
+}
