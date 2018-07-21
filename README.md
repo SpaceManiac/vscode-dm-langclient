@@ -24,6 +24,8 @@ Language server features include:
 Additional extension features include:
 
 * Status bar control to toggle a file's tickmark in the `.dme`.
+  * Automatically unticking deleted files.
+  * Optionally ticking newly-created files.
 * Built-in DM Reference browser.
   * Open index with "DreamMaker: Open DM Reference" in the command palette.
   * Look up items with workspace symbol search (Ctrl+T).
