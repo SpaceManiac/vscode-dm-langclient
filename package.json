@@ -80,7 +80,21 @@
 					"description": "Automatically ticks newly created code files if set."
 				}
 			}
-		}
+		},
+		"problemMatchers": [
+			{
+				"name": "dreammaker",
+				"owner": "dm",
+				"fileLocation": ["relative", "${workspaceFolder}"],
+				"pattern": {
+					"regexp": "^([^:]+):(\\d+):([^:]+): (.*)$",
+					"file": 1,
+					"line": 2,
+					"severity": 3,
+					"message": 4
+				}
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
