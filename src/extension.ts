@@ -69,7 +69,8 @@ export async function activate(context: ExtensionContext) {
 		await toggle_ticked(file_uri, false);
 	});
 	watcher.onDidCreate(async (file_uri) => {
-		if (await config.tick_on_create()) {
+		// don't automatically tick new non-code files
+		if (file_uri.fsPath.endsWith(".dm") && await config.tick_on_create()) {
 			await toggle_ticked(file_uri, true);
 			await update_ticked_status();
 		}
