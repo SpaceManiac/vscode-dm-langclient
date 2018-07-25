@@ -2,7 +2,7 @@
 'use strict';
 
 import * as os from 'os';
-import { workspace, window, Uri } from "vscode";
+import { workspace, window, Uri, ConfigurationTarget } from "vscode";
 import { exists } from './misc';
 
 export async function auto_update(): Promise<boolean> {
@@ -12,13 +12,13 @@ export async function auto_update(): Promise<boolean> {
     }
     let choice = await window.showInformationMessage("Auto-updates are available for dm-langserver. Would you like to enable them?", "Yes", "Just Once", "No");
     if (choice === "Yes") {
-        workspace.getConfiguration('dreammaker').update('autoUpdate', true, true);
+        workspace.getConfiguration('dreammaker').update('autoUpdate', true, ConfigurationTarget.Global);
         return true;
     } else if (choice === "Just Once") {
-        workspace.getConfiguration('dreammaker').update('autoUpdate', false, true);
+        workspace.getConfiguration('dreammaker').update('autoUpdate', false, ConfigurationTarget.Global);
         return true;
     } else if (choice === "No") {
-        workspace.getConfiguration('dreammaker').update('autoUpdate', false, true);
+        workspace.getConfiguration('dreammaker').update('autoUpdate', false, ConfigurationTarget.Global);
         return false;
     } else {
         return false;
@@ -62,7 +62,7 @@ export async function byond_path(): Promise<string | undefined> {
 
         let choice = await window.showInformationMessage(message, "Configure", "Never");
         if (choice === "Never") {
-            workspace.getConfiguration('dreammaker').update('byondPath', null, true);
+            workspace.getConfiguration('dreammaker').update('byondPath', null, ConfigurationTarget.Global);
             return undefined;
         } else if (choice !== "Configure") {
             return undefined;
@@ -83,7 +83,7 @@ export async function byond_path(): Promise<string | undefined> {
     }
 
     // Store the selected directory
-    workspace.getConfiguration('dreammaker').update('byondPath', directory, true);
+    workspace.getConfiguration('dreammaker').update('byondPath', directory, ConfigurationTarget.Global);
     return directory;
 }
 
@@ -94,12 +94,12 @@ export async function tick_on_create(): Promise<boolean> {
     }
     let choice = await window.showInformationMessage("Would you like to tick newly-created code files?", "Once", "Always", "Never");
     if (choice === "Always") {
-        workspace.getConfiguration('dreammaker').update('tickOnCreate', true, true);
+        workspace.getConfiguration('dreammaker').update('tickOnCreate', true, ConfigurationTarget.Global);
         return true;
     } else if (choice === "Once") {
         return true;
     } else if (choice === "Never") {
-        workspace.getConfiguration('dreammaker').update('tickOnCreate', false, true);
+        workspace.getConfiguration('dreammaker').update('tickOnCreate', false, ConfigurationTarget.Global);
         return false;
     } else {
         return false;

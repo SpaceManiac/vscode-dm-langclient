@@ -3,7 +3,7 @@
 
 import * as os from 'os';
 import * as fs from 'fs';
-import { workspace, window, commands, ExtensionContext, StatusBarItem, StatusBarAlignment, Uri, TextEditor } from 'vscode';
+import { workspace, window, commands, ExtensionContext, StatusBarItem, StatusBarAlignment, Uri, TextEditor, ConfigurationTarget } from 'vscode';
 import * as languageclient from 'vscode-languageclient';
 import fetch from 'node-fetch';
 import * as mkdirp from 'mkdirp';
@@ -272,7 +272,7 @@ async function prompt_for_server_command(context: ExtensionContext, message: str
 	}
 	/// And update the config.
 	const path = list[0].fsPath;
-	workspace.getConfiguration('dreammaker').update('langserverPath', path, true);
+	workspace.getConfiguration('dreammaker').update('langserverPath', path, ConfigurationTarget.Global);
 	return path;
 }
 
@@ -311,7 +311,7 @@ async function auto_update(context: ExtensionContext, platform: string, arch: st
 		case 404:  // Not found
 			return `Binaries are not available for ${arch}-${platform}.`;
 		case 410:  // Endpoint removed
-			workspace.getConfiguration('dreammaker').update('autoUpdate', false, true);
+			workspace.getConfiguration('dreammaker').update('autoUpdate', false, ConfigurationTarget.Global);
 			return "Update endpoint removed, try updating the extension.";
 		default:  // Error
 			return `Server returned ${res.status} ${res.statusText}.`;
