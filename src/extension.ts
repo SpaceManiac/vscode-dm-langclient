@@ -14,6 +14,7 @@ import * as extras from './extras';
 import * as environment from './environment';
 import * as reference from './reference';
 import * as config from './config';
+import * as tasks from './tasks';
 
 let lc: languageclient.LanguageClient;
 let status: StatusBarItem;
@@ -76,6 +77,9 @@ export async function activate(context: ExtensionContext) {
 		}
 	});
 	context.subscriptions.push(watcher);
+
+	// create the task provider for convenient Ctrl+Shift+B
+	workspace.registerTaskProvider("dreammaker", new tasks.Provider());
 
 	// start the language client
 	await start_language_client_catch(context);

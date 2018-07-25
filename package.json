@@ -84,7 +84,7 @@
 		"problemMatchers": [
 			{
 				"name": "dreammaker",
-				"owner": "dm",
+				"owner": "dreammaker",
 				"fileLocation": ["relative", "${workspaceFolder}"],
 				"pattern": {
 					"regexp": "^([^:]+):(\\d+):([^:]+): (.*)$",
@@ -93,6 +93,20 @@
 					"severity": 3,
 					"message": 4
 				}
+			}
+		],
+		"taskDefinitions": [
+			{
+				"type": "dreammaker",
+				"properties": {
+					"dme": {
+						"type": "string",
+						"description": "The environment file to compile"
+					}
+				},
+				"required": [
+					"dme"
+				]
 			}
 		]
 	},
