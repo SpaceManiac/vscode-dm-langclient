@@ -16,12 +16,8 @@ class DMTask implements TaskDefinition {
 
 export class Provider implements TaskProvider {
     async provideTasks(token?: CancellationToken): Promise<Task[]> {
-        let byond_path = await config.byond_path();
-        if (!byond_path) {
-            return [];
-        }
-
         let list = [];
+        let byond_path;
         for (let folder of (workspace.workspaceFolders || [])) {
             if (folder.uri.scheme !== 'file') {
                 continue;
@@ -31,6 +27,14 @@ export class Provider implements TaskProvider {
             for (let file of files) {
                 if (!file.endsWith('.dme')) {
                     continue;
+                }
+
+                if (!byond_path) {
+                    byond_path = await config.byond_path();
+                    if (!byond_path) {
+                        // not configured
+                        return [];
+                    }
                 }
 
                 list.push(new Task(

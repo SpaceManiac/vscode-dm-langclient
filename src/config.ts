@@ -32,6 +32,10 @@ async function validate_byond_path(path: string): Promise<boolean> {
 export async function byond_path(): Promise<string | undefined> {
     // If it's specified use it right away.
     let directory: string | undefined = workspace.getConfiguration('dreammaker').get('byondPath');
+    if (directory === null) {
+        // Explicitly disabled.
+        return;
+    }
     if (directory && await validate_byond_path(directory)) {
         return directory;
     }
@@ -56,8 +60,11 @@ export async function byond_path(): Promise<string | undefined> {
             break;
         }
 
-        let choice = await window.showInformationMessage(message, "Configure");
-        if (choice !== "Configure") {
+        let choice = await window.showInformationMessage(message, "Configure", "Never");
+        if (choice === "Never") {
+            workspace.getConfiguration('dreammaker').update('byondPath', null, true);
+            return undefined;
+        } else if (choice !== "Configure") {
             return undefined;
         }
 

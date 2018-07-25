@@ -71,7 +71,7 @@
 				},
 				"dreammaker.byondPath": {
 					"type": "string",
-					"default": null,
+					"default": "",
 					"description": "Sets the path to the BYOND installation."
 				},
 				"dreammaker.tickOnCreate": {
