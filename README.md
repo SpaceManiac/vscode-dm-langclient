@@ -23,6 +23,7 @@ Language server features include:
 
 Additional extension features include:
 
+* Build task (Ctrl+Shift+B) support for invoking DreamMaker.
 * Status bar control to toggle a file's tickmark in the `.dme`.
   * Automatically unticking deleted files.
   * Optionally ticking newly-created files.
