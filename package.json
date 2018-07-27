@@ -1,11 +1,14 @@
 {
 	"name": "dm-langclient",
+	"version": "0.0.4",
 	"displayName": "DreamMaker Language Client",
 	"description": "Client for DreamMaker language server",
 	"publisher": "platymuus",
 	"author": "SpaceManiac",
 	"license": "GPL-3.0",
-	"version": "0.0.4",
+	"keywords": [
+		"byond", "dream maker", "dm", "ss13"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SpaceManiac/SpacemanDMM/"
