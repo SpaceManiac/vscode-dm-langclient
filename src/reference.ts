@@ -1,52 +1,67 @@
 // File system provider which serves HTML excerpts from the BYOND reference.
 'use strict';
 
-import { Uri, TextDocumentContentProvider, commands, ViewColumn, TextEditor } from "vscode";
+import { Uri, TextDocumentContentProvider, ViewColumn, TextEditor, WebviewPanel, window, commands } from "vscode";
 import { CancellationToken, Emitter } from "vscode-jsonrpc";
 import { readFile } from "./misc";
 import * as config from './config';
 
-const AUTHORITY = "singlepage";
+let panel: WebviewPanel | null = null;
+
+function open_panel(html: string): WebviewPanel {
+    if (!panel) {
+        panel = window.createWebviewPanel("dreammaker.reference", "DM Reference", ViewColumn.Two, {
+            enableCommandUris: true,
+            enableFindWidget: true,
+        });
+        panel.onDidDispose(() => {
+            panel = null;
+        });
+    }
+    panel.webview.html = html;
+    return panel;
+}
 
 export class Provider implements TextDocumentContentProvider {
-    public scheme: string = "byond-docs";
-    private singlepage_uri = Uri.parse(`${this.scheme}://${AUTHORITY}/`);
+    public scheme: string = "dm";
 
     private change_emitter = new Emitter<Uri>();
     public onDidChange = this.change_emitter.event;
 
-    private last_dm_path: string | undefined;
-
     public async open_reference(dm_path?: string) {
-        this.last_dm_path = dm_path;
-        this.change_emitter.fire(this.singlepage_uri);
-        return commands.executeCommand("vscode.previewHtml", this.singlepage_uri, ViewColumn.Two, "DM Reference");
+        open_panel(await this.reference_contents(dm_path));
     }
 
     async provideTextDocumentContent(uri: Uri, token: CancellationToken): Promise<string | undefined> {
         //assert uri.scheme == this.scheme
-        if (uri.authority == AUTHORITY) {
-            return this.provideSinglePage();
-        } else if (uri.authority == 'reference') {
-            // Open the reference and return a blank page - see check_kill_ed.
-            // This is done because Workspace Symbol Search will try to open
-            // the URL the language server returns as a normal text document,
-            // and we want an HTML preview.
-            this.open_reference(uri.fragment);
-            return "";
+        if (uri.authority === 'docs' && uri.path === '/reference.dm') {
+            // Return a snippet which will appear in the Go To Definition hover
+            // preview. If Workspace Symbol Search is used or the definition
+            // is actually gone to, check_kill_ed below will open the webview
+            // with the actual contents of the reference.
+            return `${uri.fragment}  // in the reference`;
         }
     }
 
     // Close the dummy editor created by Workspace Symbol Search.
     public check_kill_ed(ed: TextEditor | undefined) {
-        if (ed) {
-            if (ed.document.uri.scheme == this.scheme && ed.document.uri.authority != AUTHORITY) {
+        if (!ed || ed.document.uri.scheme !== this.scheme) {
+            return;
+        }
+        let uri = ed.document.uri;
+        if (uri.authority === 'docs' && uri.path === '/reference.dm') {
+            this.open_reference(uri.fragment);
+            if (ed.hide) {
+                // deprecated
+                ed.hide();
+            } else {
+                // might close the wrong editor
                 commands.executeCommand("workbench.action.closeActiveEditor");
             }
         }
     }
 
-    private async provideSinglePage(): Promise<string> {
+    private async reference_contents(dm_path?: string): Promise<string> {
         // Read the reference HTML
         const directory: string | undefined = await config.byond_path();
         if (!directory) {
@@ -54,8 +69,8 @@ export class Provider implements TextDocumentContentProvider {
         }
 
         let body;
-        let dm_path = this.last_dm_path && this.last_dm_path.replace(/>/g, "&gt;").replace(/</g, "&lt;");
         if (dm_path) {
+            dm_path = dm_path.replace(/>/g, "&gt;").replace(/</g, "&lt;");
             let fname = `${directory}/help/ref/info.html`;
             let contents = await readFile(fname, {encoding: 'latin1'});
 
