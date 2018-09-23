@@ -67,7 +67,9 @@ export async function activate(context: ExtensionContext) {
 	// create the file system watcher for ticking created/unticking deleted files
 	let watcher = workspace.createFileSystemWatcher(environment.TICKABLE_GLOB, false, true, false);
 	watcher.onDidDelete(async (file_uri) => {
-		await toggle_ticked(file_uri, false);
+		if (await config.tick_on_create()) {
+			await toggle_ticked(file_uri, false);
+		}
 	});
 	watcher.onDidCreate(async (file_uri) => {
 		// don't automatically tick new non-code files
