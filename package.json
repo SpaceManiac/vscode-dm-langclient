@@ -59,28 +59,22 @@
 				"dreammaker.autoUpdate": {
 					"type": "boolean",
 					"default": null,
-					"description": "Enables or disables server auto-updates."
+					"description": "Whether the language server should be automatically updated."
 				},
 				"dreammaker.langserverPath": {
 					"type": "string",
 					"default": null,
-					"description": "Sets the path to the dm-langserver executable."
-				},
-				"dreammaker.maxProblems": {
-					"scope": "resource",
-					"type": "number",
-					"default": 100,
-					"description": "Controls the maximum number of problems produced by the server."
+					"description": "Path to the dm-langserver executable."
 				},
 				"dreammaker.byondPath": {
 					"type": "string",
 					"default": "",
-					"description": "Sets the path to the BYOND installation."
+					"description": "Path to the BYOND installation."
 				},
 				"dreammaker.tickOnCreate": {
 					"type": "boolean",
 					"default": null,
-					"description": "Automatically ticks newly created code files if set."
+					"description": "Whether to automatically tick created/untick deleted code files."
 				}
 			}
 		},
