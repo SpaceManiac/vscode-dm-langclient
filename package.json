@@ -7,14 +7,17 @@
 	"author": "SpaceManiac",
 	"license": "GPL-3.0",
 	"keywords": [
-		"byond", "dream maker", "dm", "ss13"
+		"byond",
+		"dream maker",
+		"dm",
+		"ss13"
 	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SpaceManiac/SpacemanDMM/"
 	},
 	"engines": {
-		"vscode": "^1.23.0"
+		"vscode": "^1.30.0"
 	},
 	"categories": [
 		"Programming Languages",
@@ -82,7 +85,10 @@
 			{
 				"name": "dreammaker",
 				"owner": "dreammaker",
-				"fileLocation": ["relative", "${workspaceFolder}"],
+				"fileLocation": [
+					"relative",
+					"${workspaceFolder}"
+				],
 				"pattern": {
 					"regexp": "^([^:]+):(\\d+):([^:]+): (.*)$",
 					"file": 1,
@@ -116,15 +122,15 @@
 	},
 	"dependencies": {
 		"mkdirp": "^0.5.1",
-		"node-fetch": "^2.1.2",
-		"vscode": "^1.1.17",
-		"vscode-languageclient": "^3.5.1"
+		"node-fetch": "^2.3.0",
+		"vscode-languageclient": "^5.2.1"
 	},
 	"devDependencies": {
 		"@types/mkdirp": "^0.5.2",
-		"@types/node": "^7.0.64",
+		"@types/node": "^7.10.3",
 		"@types/node-fetch": "^1.6.9",
-		"tslint": "^5.10.0",
-		"typescript": "^2.8.3"
+		"tslint": "^5.12.1",
+		"typescript": "^2.9.2",
+		"vscode": "^1.1.29"
 	}
 }
