@@ -1,6 +1,6 @@
 {
 	"name": "dm-langclient",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"displayName": "DreamMaker Language Client",
 	"description": "Client for DreamMaker language server",
 	"publisher": "platymuus",
