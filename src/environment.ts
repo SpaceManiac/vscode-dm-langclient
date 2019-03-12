@@ -19,7 +19,7 @@ export async function is_ticked(uri: Uri, include: string): Promise<boolean | un
     }
 
     let env = await EnvironmentFile.from_uri(uri);
-    include = include.replace("/", "\\");
+    include = include.replace(/\//g, "\\");
 
     for (let file of env.includes) {
         if (file == include) {
@@ -32,7 +32,7 @@ export async function is_ticked(uri: Uri, include: string): Promise<boolean | un
 export async function toggle_ticked(environment_uri: Uri, include: string, state?: boolean | undefined): Promise<WorkspaceEdit | null> {
     // parse the environment
     let env = await EnvironmentFile.from_uri(environment_uri);
-    include = include.replace("/", "\\");
+    include = include.replace(/\//g, "\\");
 
     // generate the workspace edit: either insert or delete the given line
     let edit = new WorkspaceEdit();
