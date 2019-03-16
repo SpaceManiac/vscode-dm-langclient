@@ -26,7 +26,7 @@
 	"activationEvents": [
 		"onLanguage:dm"
 	],
-	"main": "./out/extension",
+	"main": "./dist/extension",
 	"contributes": {
 		"languages": [
 			{
@@ -114,9 +114,10 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
+		"vscode:prepublish": "webpack --mode production",
+		"compile": "webpack --mode none",
+		"watch": "webpack --mode none --watch",
+		"test-compile": "tsc -p ./",
 		"postinstall": "node ./node_modules/vscode/bin/install",
 		"update-vscode": "node ./node_modules/vscode/bin/install"
 	},
@@ -129,8 +130,12 @@
 		"@types/mkdirp": "^0.5.2",
 		"@types/node": "^7.10.3",
 		"@types/node-fetch": "^1.6.9",
+		"@types/webpack": "^4.4.25",
+		"ts-loader": "^5.3.3",
 		"tslint": "^5.12.1",
 		"typescript": "^2.9.2",
-		"vscode": "^1.1.29"
+		"vscode": "^1.1.29",
+		"webpack": "^4.29.6",
+		"webpack-cli": "^3.3.0"
 	}
 }

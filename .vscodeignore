@@ -1,10 +1,12 @@
-.vscode/**
-typings/**
-out/test/**
-test/**
-src/**
+.vscode/
+typings/
+node_modules/
+out/
+test/
+src/
 **/*.map
 .gitignore
 tsconfig.json
+webpack.config.js
 vsc-extension-quickstart.md
 *.sh
