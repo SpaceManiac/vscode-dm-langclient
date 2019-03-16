@@ -2,3 +2,6 @@ npm-debug.log
 node_modules/
 out/
 bin/
+dist/
+.vscode/
+*.vsix
