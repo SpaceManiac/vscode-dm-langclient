@@ -1,4 +1,4 @@
-import { window, TreeDataProvider, TreeItem, ProviderResult, TreeItemCollapsibleState, DocumentSelector, Uri } from "vscode";
+import { window, TreeDataProvider, TreeItem, ProviderResult, TreeItemCollapsibleState, DocumentSelector, Uri, Command } from "vscode";
 import { Emitter } from "vscode-jsonrpc";
 import { StaticFeature, ClientCapabilities, ServerCapabilities } from "vscode-languageclient";
 import { ObjectTreeParams, ObjectTreeEntry } from "./extras";
@@ -22,24 +22,31 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
     onDidChangeTreeData = this.change_emitter.event;
 
     getTreeItem(element: ObjectTreeEntry): TreeItem {
-        let uri = null;
+        let uri: Uri | undefined;
+        let command: Command | undefined;
+
         if (element.location) {
-            if (element.location.uri.startsWith('dm:')) {
+            if (element.location.uri.startsWith('dm://docs/reference.dm')) {
                 uri = Uri.parse(element.location.uri);
+                command = {
+                    title: "Open DM Reference",
+                    command: 'dreammaker.openReference',
+                    arguments: [uri.fragment],
+                };
             } else {
-                uri = Uri.parse(`${element.location.uri}#${1 + element.location.range.start.line}`);
+                uri = Uri.parse(element.location.uri).with({fragment: `${1 + element.location.range.start.line}`});
+                command = {
+                    title: "Go to Definition",
+                    command: 'vscode.open',
+                    arguments: [uri],
+                };
             }
         }
 
         return {
             label: element.name,
             //description: "Cool description",
-            command: {
-                title: "title",
-                command: 'vscode.open',
-                tooltip: "tooltip",
-                arguments: [uri],
-            },
+            command: command,
             tooltip: element.location ? element.location.uri : "",
             collapsibleState: element.children.length ? TreeItemCollapsibleState.Collapsed : TreeItemCollapsibleState.None,
         };
