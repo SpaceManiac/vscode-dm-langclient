@@ -1,4 +1,4 @@
-import { window, TreeDataProvider, TreeItem, ProviderResult, TreeItemCollapsibleState, DocumentSelector, Uri, Command } from "vscode";
+import { window, TreeDataProvider, TreeItem, ProviderResult, TreeItemCollapsibleState, DocumentSelector, Uri, Command, ThemeIcon } from "vscode";
 import { Emitter } from "vscode-jsonrpc";
 import { StaticFeature, ClientCapabilities, ServerCapabilities } from "vscode-languageclient";
 import { ObjectTreeParams, ObjectTreeEntry } from "./extras";
@@ -45,9 +45,8 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
 
         return {
             label: element.name,
-            //description: "Cool description",
             command: command,
-            tooltip: element.location ? element.location.uri : "",
+            iconPath: element.location ? ThemeIcon.File : ThemeIcon.Folder,
             collapsibleState: element.children.length ? TreeItemCollapsibleState.Collapsed : TreeItemCollapsibleState.None,
         };
     }

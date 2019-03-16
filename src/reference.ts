@@ -18,6 +18,7 @@ function open_panel(html: string): WebviewPanel {
             panel = null;
         });
     }
+    panel.reveal();
     panel.webview.html = html;
     return panel;
 }
