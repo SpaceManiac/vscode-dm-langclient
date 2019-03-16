@@ -1,7 +1,7 @@
 import { window, TreeDataProvider, TreeItem, ProviderResult, TreeItemCollapsibleState, DocumentSelector, Uri, Command, ThemeIcon } from "vscode";
 import { Emitter } from "vscode-jsonrpc";
-import { StaticFeature, ClientCapabilities, ServerCapabilities } from "vscode-languageclient";
-import { ObjectTreeParams, ObjectTreeEntry } from "./extras";
+import { StaticFeature, ClientCapabilities, ServerCapabilities, SymbolKind } from "vscode-languageclient";
+import { ObjectTreeParams, ObjectTreeEntry, ObjectTreeType } from "./extras";
 
 let provider: TreeProvider;
 
@@ -16,8 +16,29 @@ export function get_provider(): TreeProvider {
     return provider;
 }
 
+class VarsFolder implements ObjectTreeEntry {
+    name = "var";
+    kind = SymbolKind.Namespace;
+    location = undefined;
+    type: ObjectTreeType;
+    constructor(type: ObjectTreeType) {
+        this.type = type;
+    }
+}
+
+class ProcsFolder implements ObjectTreeEntry {
+    name = "proc";
+    kind = SymbolKind.Namespace;
+    location = undefined;
+    type: ObjectTreeType;
+    constructor(type: ObjectTreeType) {
+        this.type = type;
+    }
+}
+
 export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
-    private roots: ObjectTreeEntry[] = [];
+    private data?: ObjectTreeParams;
+
     private change_emitter = new Emitter<ObjectTreeEntry | undefined>();
     onDidChangeTreeData = this.change_emitter.event;
 
@@ -43,21 +64,52 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
             }
         }
 
+        let hasChildren;
+        if (element instanceof VarsFolder || element instanceof ProcsFolder) {
+            hasChildren = true;
+        } else if (element.kind == SymbolKind.Class) {
+            let type = element as ObjectTreeType;
+            hasChildren = type.vars.length || type.procs.length || type.children.length;
+        }
+
         return {
             label: element.name,
             command: command,
             iconPath: element.location ? ThemeIcon.File : ThemeIcon.Folder,
-            collapsibleState: element.children.length ? TreeItemCollapsibleState.Collapsed : TreeItemCollapsibleState.None,
+            collapsibleState: hasChildren ? TreeItemCollapsibleState.Collapsed : TreeItemCollapsibleState.None,
         };
     }
 
     getChildren(element?: ObjectTreeEntry | undefined): ProviderResult<ObjectTreeEntry[]> {
-        let list = element ? element.children : this.roots;
-        return list;
+        if (!element) {
+            if (!this.data) {
+                return [];
+            }
+            element = this.data.root;
+        }
+
+        if (element instanceof VarsFolder) {
+            return element.type.vars;
+        } else if (element instanceof ProcsFolder) {
+            return element.type.procs;
+        } else if (element.kind == SymbolKind.Class) {
+            let type = element as ObjectTreeType;
+            let list: ObjectTreeEntry[] = [];
+            if (type.vars.length) {
+                list.push(new VarsFolder(type));
+            }
+            if (type.procs.length) {
+                list.push(new ProcsFolder(type));
+            }
+            list.push(...type.children);
+            return list;
+        } else {
+            return [];
+        }
     }
 
     update(message: ObjectTreeParams) {
-        this.roots = message.roots;
+        this.data = message;
         this.change_emitter.fire(undefined);
     }
 }

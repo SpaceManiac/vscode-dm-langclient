@@ -11,11 +11,21 @@ export interface WindowStatusParams {
 
 export const ObjectTree: NotificationType<ObjectTreeParams, {}> = new NotificationType('experimental/dreammaker/objectTree');
 export interface ObjectTreeParams {
-    roots: ObjectTreeEntry[],
+    root: ObjectTreeType,
 }
 export interface ObjectTreeEntry {
     name: string,
     kind: SymbolKind,
     location: Location | undefined,
-    children: ObjectTreeEntry[],
+}
+export interface ObjectTreeType extends ObjectTreeEntry {
+    vars: ObjectTreeVar[],
+    procs: ObjectTreeProc[],
+    children: ObjectTreeType[],
+}
+export interface ObjectTreeVar extends ObjectTreeEntry {
+    is_declaration: boolean,
+}
+export interface ObjectTreeProc extends ObjectTreeEntry {
+    is_verb: boolean | undefined,
 }
