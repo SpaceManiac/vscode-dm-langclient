@@ -15,6 +15,7 @@ import * as environment from './environment';
 import * as reference from './reference';
 import * as config from './config';
 import * as tasks from './tasks';
+import * as objtree from './objtree';
 
 let lc: languageclient.LanguageClient;
 let status: StatusBarItem;
@@ -172,6 +173,7 @@ async function start_language_client(context: ExtensionContext) {
 	};
 
 	lc = new languageclient.LanguageClient('dm-langserver', "DreamMaker Language Server", serverOptions, clientOptions);
+	lc.registerFeature(new objtree.ObjectTreeFeature());
 	context.subscriptions.push(lc.start());
 	progress_counter();
 }
@@ -203,6 +205,9 @@ async function progress_counter() {
 		if (update_available) {
 			status.text += ' - click to update';
 		}
+	});
+	lc.onNotification(extras.ObjectTree, message => {
+		objtree.get_provider().update(message);
 	});
 }
 

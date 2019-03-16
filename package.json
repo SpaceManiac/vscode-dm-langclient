@@ -111,7 +111,24 @@
 					"dme"
 				]
 			}
-		]
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "dreammaker",
+					"title": "DreamMaker",
+					"icon": "media/dreammaker.svg"
+				}
+			]
+		},
+		"views": {
+			"dreammaker": [
+				{
+					"id": "dreammaker-objtree",
+					"name": "Object Tree"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",
