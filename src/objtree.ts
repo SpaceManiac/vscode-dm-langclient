@@ -1,7 +1,7 @@
-import { window, TreeDataProvider, TreeItem, ProviderResult, TreeItemCollapsibleState, DocumentSelector, Uri, Command, ThemeIcon } from "vscode";
+import { window, TreeDataProvider, TreeItem, ProviderResult, TreeItemCollapsibleState, DocumentSelector, Uri, ThemeIcon } from "vscode";
 import { Emitter } from "vscode-jsonrpc";
 import { StaticFeature, ClientCapabilities, ServerCapabilities, SymbolKind } from "vscode-languageclient";
-import { ObjectTreeParams, ObjectTreeEntry, ObjectTreeType } from "./extras";
+import { ObjectTreeParams, ObjectTreeEntry, ObjectTreeType, ObjectTreeVar, ObjectTreeProc } from "./extras";
 
 let provider: TreeProvider;
 
@@ -43,20 +43,23 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
     onDidChangeTreeData = this.change_emitter.event;
 
     getTreeItem(element: ObjectTreeEntry): TreeItem {
-        let uri: Uri | undefined;
-        let command: Command | undefined;
+        let item: TreeItem = {
+            label: element.name,
+            iconPath: element.location ? ThemeIcon.File : ThemeIcon.Folder,
+            collapsibleState: TreeItemCollapsibleState.None,
+        };
 
         if (element.location) {
             if (element.location.uri.startsWith('dm://docs/reference.dm')) {
-                uri = Uri.parse(element.location.uri);
-                command = {
+                let uri = Uri.parse(element.location.uri);
+                item.command = {
                     title: "Open DM Reference",
                     command: 'dreammaker.openReference',
                     arguments: [uri.fragment],
                 };
             } else {
-                uri = Uri.parse(element.location.uri).with({fragment: `${1 + element.location.range.start.line}`});
-                command = {
+                let uri = Uri.parse(element.location.uri).with({fragment: `${1 + element.location.range.start.line}`});
+                item.command = {
                     title: "Go to Definition",
                     command: 'vscode.open',
                     arguments: [uri],
@@ -64,20 +67,26 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
             }
         }
 
-        let hasChildren;
         if (element instanceof VarsFolder || element instanceof ProcsFolder) {
-            hasChildren = true;
+            item.collapsibleState = TreeItemCollapsibleState.Collapsed;
         } else if (element.kind == SymbolKind.Class) {
             let type = element as ObjectTreeType;
-            hasChildren = type.vars.length || type.procs.length || type.children.length;
+            if (type.vars.length || type.procs.length || type.children.length) {
+                item.collapsibleState = TreeItemCollapsibleState.Collapsed;
+            }
+        } else if (element.kind == SymbolKind.Field) {
+            let field = element as ObjectTreeVar;
+            if (field.is_declaration) {
+                item.description = "var";
+            }
+        } else if (element.kind == SymbolKind.Method || element.kind == SymbolKind.Constructor || element.kind == SymbolKind.Function) {
+            let proc = element as ObjectTreeProc;
+            if (proc.is_verb !== null) {
+                item.description = proc.is_verb ? "verb" : "proc";
+            }
         }
 
-        return {
-            label: element.name,
-            command: command,
-            iconPath: element.location ? ThemeIcon.File : ThemeIcon.Folder,
-            collapsibleState: hasChildren ? TreeItemCollapsibleState.Collapsed : TreeItemCollapsibleState.None,
-        };
+        return item;
     }
 
     getChildren(element?: ObjectTreeEntry | undefined): ProviderResult<ObjectTreeEntry[]> {
