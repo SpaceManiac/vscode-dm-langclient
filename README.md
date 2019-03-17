@@ -12,24 +12,30 @@ extension, which provides syntax highlighting.
 [BYOND DM Language Support]: https://marketplace.visualstudio.com/items?itemName=gbasood.byond-dm-language-support
 
 The extension has an optional auto-update feature for the language server, with
-binaries available for common platforms. On other platforms, the path to the
+binaries available for Windows and Linux. On other platforms, the path to the
 `dm-langserver` binary may be specified manually.
 
 Language server features include:
 
 * Workspace symbol search (Ctrl+T).
+* Go to definition (Ctrl+Click).
+* Go to type definition.
+* As-you-type autocomplete.
+* Signature help in proc calls.
+* Find references to a symbol.
+* Current file outline view.
 * Hovering `var` and `proc` definitions to see their parents.
 * And more, with details at the [language server documentation][ls].
 
 Additional extension features include:
 
+* Project object tree view.
 * Build task (Ctrl+Shift+B) support for invoking DreamMaker.
 * Status bar control to toggle a file's tickmark in the `.dme`.
-  * Automatically unticking deleted files.
-  * Optionally ticking newly-created files.
+  * Optionally automatically ticking created/unticking deleted files.
 * Built-in DM Reference browser.
   * Open index with "DreamMaker: Open DM Reference" in the command palette.
-  * Look up items with workspace symbol search (Ctrl+T).
+  * Look up items with workspace symbol search, go to definition, or object tree.
 
 ## License
 
