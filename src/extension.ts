@@ -182,7 +182,7 @@ async function progress_counter() {
 	let environment = "DM";
 
 	await lc.onReady();
-	lc.onNotification(extras.WindowStatus, message => {
+	lc.onNotification(extras.WindowStatus, async message => {
 		if (message.environment) {
 			environment = message.environment;
 			environment_file = `${environment}.dme`;
@@ -194,10 +194,20 @@ async function progress_counter() {
 			status.text = `${environment}`;
 			status.tooltip = undefined;
 		} else if (tasks.length == 1) {
-			tasks.forEach(element => {
-				status.text = `${environment}: ${element}`;
-				status.tooltip = undefined;
-			});
+			let element = tasks[0];
+			status.text = `${environment}: ${element}`;
+			status.tooltip = undefined;
+
+			// Special handling for the "no .dme file" error message.
+			if (element == "no .dme file") {
+				status.tooltip = "Open Folder the directory containing your .dme file";
+				status.command = 'vscode.openFolder';
+				await lc.stop();
+				let result = await window.showInformationMessage("The DreamMaker language server requires access to your project's `.dme` file. Please use the \"Open Folder\" command to open the folder which contains it.", "Open Folder");
+				if (result === "Open Folder") {
+					await commands.executeCommand('vscode.openFolder');
+				}
+			}
 		} else {
 			status.text = `${environment}: ${tasks.length} tasks...`;
 			status.tooltip = tasks.join("\n");
