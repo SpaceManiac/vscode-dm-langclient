@@ -3,7 +3,7 @@
 
 import * as os from 'os';
 import * as fs from 'fs';
-import { workspace, window, commands, ExtensionContext, StatusBarItem, StatusBarAlignment, Uri, TextEditor, ConfigurationTarget } from 'vscode';
+import { workspace, window, commands, ExtensionContext, StatusBarItem, StatusBarAlignment, Uri, TextEditor, ConfigurationTarget, Position } from 'vscode';
 import * as languageclient from 'vscode-languageclient';
 import fetch from 'node-fetch';
 import * as mkdirp from 'mkdirp';
@@ -58,6 +58,19 @@ export async function activate(context: ExtensionContext) {
 	}));
 	context.subscriptions.push(commands.registerCommand('dreammaker.openReference', async (dm_path: string) => {
 		return docs_provider.open_reference(dm_path);
+	}));
+
+	context.subscriptions.push(commands.registerCommand('dreammaker.findReferencesTree', async (element: extras.ObjectTreeEntry) => {
+		if (!element || !element.location) {
+			return;
+		}
+
+		// Transform from language server elements to vscode classes. Otherwise
+		// the invoked command will simply look at cursor position.
+		let uri = Uri.parse(element.location.uri);
+		let start = element.location.range.start;
+		let position = new Position(start.line, start.character);
+		return await commands.executeCommand("references-view.find", uri, position);
 	}));
 
 	// register the docs provider

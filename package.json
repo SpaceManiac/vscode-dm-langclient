@@ -53,6 +53,10 @@
 				"command": "dreammaker.openReference",
 				"title": "Open DM Reference",
 				"category": "DreamMaker"
+			},
+			{
+				"command": "dreammaker.findReferencesTree",
+				"title": "Find All References (Object Tree)"
 			}
 		],
 		"configuration": {
@@ -126,6 +130,14 @@
 				{
 					"id": "dreammaker-objtree",
 					"name": "Object Tree"
+				}
+			]
+		},
+		"menus": {
+			"view/item/context": [
+				{
+					"command": "dreammaker.findReferencesTree",
+					"when": "view == dreammaker-objtree"
 				}
 			]
 		}
