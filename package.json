@@ -56,7 +56,8 @@
 			},
 			{
 				"command": "dreammaker.findReferencesTree",
-				"title": "Find All References (Object Tree)"
+				"title": "Find All References (Object Tree)",
+				"category": "DreamMaker"
 			}
 		],
 		"configuration": {
