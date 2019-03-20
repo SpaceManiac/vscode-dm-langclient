@@ -139,7 +139,7 @@
 			"view/item/context": [
 				{
 					"command": "dreammaker.findReferencesTree",
-					"when": "view == dreammaker-objtree"
+					"when": "view == dreammaker-objtree && viewItem == symbol"
 				}
 			]
 		}
