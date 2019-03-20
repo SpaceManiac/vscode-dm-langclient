@@ -129,7 +129,8 @@
 			"dreammaker": [
 				{
 					"id": "dreammaker-objtree",
-					"name": "Object Tree"
+					"name": "Object Tree",
+					"when": "dreammakerObjtreeReady"
 				}
 			]
 		},

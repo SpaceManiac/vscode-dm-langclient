@@ -230,6 +230,7 @@ async function progress_counter() {
 		}
 	});
 	lc.onNotification(extras.ObjectTree, message => {
+		commands.executeCommand('setContext', 'dreammakerObjtreeReady', true);
 		objtree.get_provider().update(message);
 	});
 }
