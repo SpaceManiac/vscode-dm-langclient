@@ -26,65 +26,81 @@ export async function auto_update(): Promise<boolean> {
 }
 
 async function validate_byond_path(path: string): Promise<boolean> {
-    return await exists(`${path}/help/ref/info.html`) && await exists(`${path}/bin/dm.exe`);
+    // Windows or Linux installs are OK
+    return await exists(`${path}/bin/dm.exe`) || await exists(`${path}/bin/DreamMaker`);
 }
 
-export async function byond_path(): Promise<string | undefined> {
+export async function find_byond_file(nameset: string[]): Promise<string | undefined> {
     // If it's specified use it right away.
-    let directory: string | undefined = workspace.getConfiguration('dreammaker').get('byondPath');
-    if (directory === null) {
+    let directories: string | string[] | undefined = workspace.getConfiguration('dreammaker').get('byondPath');
+    if (directories === null) {
         // Explicitly disabled.
         return;
-    }
-    if (directory && await validate_byond_path(directory)) {
-        return directory;
+    } else if (directories === undefined) {
+        // Not configured => empty array.
+        directories = [];
+    } else if (!(directories instanceof Array)) {
+        // Configured as a string => single-element array.
+        directories = [directories];
     }
 
     // Attempt to find BYOND in its stock location.
-    if (!directory && os.platform() === 'win32') {
+    if (!directories.length && os.platform() === 'win32') {
         if (await exists("C:/Program Files (x86)/BYOND")) {
-            directory = "C:/Program Files (x86)/BYOND";
+            directories.push("C:/Program Files (x86)/BYOND");
         } else if (await exists("C:/Program Files/BYOND")) {
-            directory = "C:/Program Files/BYOND";
+            directories.push("C:/Program Files/BYOND");
         }
     }
 
-    // Loop until the user finds or cancels
-    while (true) {
-        let message;
-        if (!directory) {
-            message = "This feature requires a BYOND path to be configured. Select now?";
-        } else if (!await validate_byond_path(directory)) {
-            message = `"${directory}" does not appear to contain a BYOND installation. Select again?`;
-        } else {
-            break;
-        }
+    // If the search path is empty, prompt the user.
+    // Loop until the user finds or cancels.
+    if (!directories.length) {
+        let directory;
+        while (true) {
+            let message;
+            if (!directory) {
+                message = "This feature requires a BYOND path to be configured. Select now?";
+            } else if (!await validate_byond_path(directory)) {
+                message = `"${directory}" does not appear to contain a BYOND installation. Select again?`;
+            } else {
+                break;
+            }
 
-        let choice = await window.showInformationMessage(message, "Configure", "Never");
-        if (choice === "Never") {
-            workspace.getConfiguration('dreammaker').update('byondPath', null, ConfigurationTarget.Global);
-            return undefined;
-        } else if (choice !== "Configure") {
-            return undefined;
-        }
+            let choice = await window.showInformationMessage(message, "Configure", "Never");
+            if (choice === "Never") {
+                workspace.getConfiguration('dreammaker').update('byondPath', null, ConfigurationTarget.Global);
+                return undefined;
+            } else if (choice !== "Configure") {
+                return undefined;
+            }
 
-        let selection: Uri[] | undefined = await window.showOpenDialog({
-            defaultUri: directory ? Uri.file(directory) : undefined,
-            canSelectFiles: false,
-            canSelectFolders: true,
-        });
-        if (!selection) {  // cancelled
-            return undefined;
+            let selection: Uri[] | undefined = await window.showOpenDialog({
+                defaultUri: directory ? Uri.file(directory) : undefined,
+                canSelectFiles: false,
+                canSelectFolders: true,
+            });
+            if (!selection) {  // cancelled
+                return undefined;
+            }
+            if (selection[0].scheme != 'file') {
+                continue;
+            }
+            directory = selection[0].fsPath;
         }
-        if (selection[0].scheme != 'file') {
-            continue;
-        }
-        directory = selection[0].fsPath;
+        directories = [directory];
+        workspace.getConfiguration('dreammaker').update('byondPath', directories, ConfigurationTarget.Global);
     }
 
-    // Store the selected directory
-    workspace.getConfiguration('dreammaker').update('byondPath', directory, ConfigurationTarget.Global);
-    return directory;
+    // Hit the search paths.
+    for (let each of directories) {
+        for (let name of nameset) {
+            let path = `${each}/${name}`;
+            if (await exists(path)) {
+                return path;
+            }
+        }
+    }
 }
 
 export async function tick_on_create(): Promise<boolean> {

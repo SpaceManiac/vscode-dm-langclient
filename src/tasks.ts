@@ -17,7 +17,7 @@ class DMTask implements TaskDefinition {
 export class Provider implements TaskProvider {
     async provideTasks(token?: CancellationToken): Promise<Task[]> {
         let list = [];
-        let byond_path;
+        let dm_exe_path;
         for (let folder of (workspace.workspaceFolders || [])) {
             if (folder.uri.scheme !== 'file') {
                 continue;
@@ -29,9 +29,9 @@ export class Provider implements TaskProvider {
                     continue;
                 }
 
-                if (!byond_path) {
-                    byond_path = await config.byond_path();
-                    if (!byond_path) {
+                if (!dm_exe_path) {
+                    dm_exe_path = await config.find_byond_file(['bin/dm.exe', 'bin/DreamMaker']);
+                    if (!dm_exe_path) {
                         // not configured
                         return [];
                     }
@@ -42,7 +42,7 @@ export class Provider implements TaskProvider {
                     folder,
                     `build - ${file}`,
                     "dm",
-                    new ProcessExecution(`${byond_path}/bin/dm.exe`, [file], { cwd: path }),
+                    new ProcessExecution(dm_exe_path, [file], { cwd: path }),
                     '$dreammaker'
                 );
                 task.group = TaskGroup.Build;

@@ -8,6 +8,10 @@ import * as config from './config';
 
 let panel: WebviewPanel | null = null;
 
+const BYOND_PATH_WARNING = "You must <a href='command:workbench.action.openSettings'>\
+    add a Windows version</a> of BYOND to <tt>dreammaker.byondPath</tt> to use \
+    the pop-up reference.";
+
 function open_panel(html: string): WebviewPanel {
     if (!panel) {
         panel = window.createWebviewPanel("dreammaker.reference", "DM Reference", ViewColumn.Two, {
@@ -64,15 +68,13 @@ export class Provider implements TextDocumentContentProvider {
 
     private async reference_contents(dm_path?: string): Promise<string> {
         // Read the reference HTML
-        const directory: string | undefined = await config.byond_path();
-        if (!directory) {
-            return "You must <a href='command:workbench.action.openSettings'>configure</a> <tt>dreammaker.byondPath</tt> to use the pop-up reference.";
-        }
-
         let body;
         if (dm_path) {
             dm_path = dm_path.replace(/>/g, "&gt;").replace(/</g, "&lt;");
-            let fname = `${directory}/help/ref/info.html`;
+            let fname = await config.find_byond_file(["help/ref/info.html"]);
+            if (!fname) {
+                return BYOND_PATH_WARNING;
+            }
             let contents = await readFile(fname, {encoding: 'latin1'});
 
             // Extract the section for the item being looked up
@@ -97,7 +99,10 @@ export class Provider implements TextDocumentContentProvider {
             }
         } else {
             // Take the contents of the index file
-            let fname = `${directory}/help/ref/contents.html`;
+            let fname = await config.find_byond_file(["help/ref/contents.html"]);
+            if (!fname) {
+                return BYOND_PATH_WARNING;
+            }
             let contents = await readFile(fname, {encoding: 'latin1'});
             body = contents.slice(contents.indexOf("<dl>")).toString();
         }
