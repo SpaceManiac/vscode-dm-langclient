@@ -1,5 +1,7 @@
 // A task provider for running DreamMaker builds.
 import * as fs from 'fs';
+import * as os from 'os';
+import { dirname } from 'path';
 import { TaskProvider, CancellationToken, Task, ProcessExecution, TaskDefinition, workspace, TaskGroup } from "vscode";
 
 import * as config from './config';
@@ -37,12 +39,17 @@ export class Provider implements TaskProvider {
                     }
                 }
 
+                let env: {[key: string]: string} = {};
+                if (os.platform() !== 'win32') {
+                    env['LD_LIBRARY_PATH'] = dirname(dm_exe_path);
+                }
+
                 let task = new Task(
                     new DMTask(file),
                     folder,
                     `build - ${file}`,
                     "dm",
-                    new ProcessExecution(dm_exe_path, [file], { cwd: path }),
+                    new ProcessExecution(dm_exe_path, [file], { cwd: path, env: env }),
                     '$dreammaker'
                 );
                 task.group = TaskGroup.Build;
