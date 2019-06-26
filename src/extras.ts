@@ -29,3 +29,5 @@ export interface ObjectTreeVar extends ObjectTreeEntry {
 export interface ObjectTreeProc extends ObjectTreeEntry {
     is_verb: boolean | undefined,
 }
+
+export const Reparse: NotificationType<{}, {}> = new NotificationType('experimental/dreammaker/reparse');

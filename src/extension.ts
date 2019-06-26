@@ -4,6 +4,7 @@
 import * as os from 'os';
 import * as fs from 'fs';
 import { workspace, window, commands, ExtensionContext, StatusBarItem, StatusBarAlignment, Uri, TextEditor, ConfigurationTarget, Position } from 'vscode';
+import * as vscode from 'vscode';
 import * as languageclient from 'vscode-languageclient';
 import fetch from 'node-fetch';
 import * as mkdirp from 'mkdirp';
@@ -95,7 +96,15 @@ export async function activate(context: ExtensionContext) {
 	context.subscriptions.push(watcher);
 
 	// create the task provider for convenient Ctrl+Shift+B
-	workspace.registerTaskProvider("dreammaker", new tasks.Provider());
+	context.subscriptions.push(workspace.registerTaskProvider("dreammaker", new tasks.Provider()));
+	context.subscriptions.push(vscode.tasks.onDidStartTask((event) => {
+		// Checking .type will get us "process", because the task has already
+		// been resolved. Just see if the name looks like a ".dme" file.
+		if (lc && event.execution.task.name.endsWith(".dme")) {
+			// When Ctrl+Shift+B is pressed, reparse without resetting.
+			lc.sendNotification(extras.Reparse, {});
+		}
+	}));
 
 	// start the language client
 	await start_language_client_catch(context);
