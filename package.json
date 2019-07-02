@@ -75,7 +75,10 @@
 					"description": "Path to the dm-langserver executable."
 				},
 				"dreammaker.byondPath": {
-					"type": ["string", "array"],
+					"type": [
+						"string",
+						"array"
+					],
 					"default": "",
 					"description": "Path to the BYOND installation."
 				},
@@ -154,19 +157,19 @@
 	},
 	"dependencies": {
 		"mkdirp": "^0.5.1",
-		"node-fetch": "^2.3.0",
+		"node-fetch": "^2.6.0",
 		"vscode-languageclient": "^5.2.1"
 	},
 	"devDependencies": {
 		"@types/mkdirp": "^0.5.2",
-		"@types/node": "^7.10.3",
+		"@types/node": "^7.10.6",
 		"@types/node-fetch": "^1.6.9",
-		"@types/webpack": "^4.4.25",
-		"ts-loader": "^5.3.3",
-		"tslint": "^5.12.1",
+		"@types/webpack": "^4.4.34",
+		"ts-loader": "^5.4.5",
+		"tslint": "^5.18.0",
 		"typescript": "^2.9.2",
-		"vscode": "^1.1.29",
-		"webpack": "^4.29.6",
-		"webpack-cli": "^3.3.0"
+		"vscode": "^1.1.35",
+		"webpack": "^4.35.2",
+		"webpack-cli": "^3.3.5"
 	}
 }
