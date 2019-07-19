@@ -321,7 +321,8 @@ async function auto_update(context: ExtensionContext, platform: string, arch: st
 		return "Auto-update disabled.";
 	}
 
-	let url = `https://wombat.platymuus.com/ss13/dm-langserver/update.php?platform=${platform}&arch=${arch}`;
+	let version = vscode.extensions.getExtension('platymuus.dm-langclient')!.packageJSON.version;
+	let url = `https://wombat.platymuus.com/ss13/dm-langserver/update.php?vscode=${version}&platform=${platform}&arch=${arch}`;
 	if (hash) {
 		url += `&hash=${hash}`;
 	}
