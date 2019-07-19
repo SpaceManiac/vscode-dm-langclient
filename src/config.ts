@@ -36,7 +36,7 @@ export async function find_byond_file(nameset: string[]): Promise<string | undef
     if (directories === null) {
         // Explicitly disabled.
         return;
-    } else if (directories === undefined) {
+    } else if (directories === undefined || directories === "") {
         // Not configured => empty array.
         directories = [];
     } else if (!(directories instanceof Array)) {
