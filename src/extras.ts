@@ -31,3 +31,4 @@ export interface ObjectTreeProc extends ObjectTreeEntry {
 }
 
 export const Reparse: NotificationType<{}, {}> = new NotificationType('experimental/dreammaker/reparse');
+export const Recompile: NotificationType<{}, {}> = new NotificationType('experimental/dreammaker/recompile');
