@@ -75,10 +75,10 @@
 					"description": "Path to the dm-langserver executable."
 				},
 				"dreammaker.byondPath": {
-					"type": [
-						"string",
-						"array"
-					],
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
 					"default": "",
 					"description": "Path to the BYOND installation."
 				},
