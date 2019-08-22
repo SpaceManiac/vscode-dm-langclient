@@ -58,6 +58,11 @@
 				"command": "dreammaker.findReferencesTree",
 				"title": "Find All References (Object Tree)",
 				"category": "DreamMaker"
+			},
+			{
+				"command": "dreammaker.recompile",
+				"title": "Hot Patch",
+				"category": "DreamMaker"
 			}
 		],
 		"configuration": {
@@ -144,6 +149,12 @@
 					"command": "dreammaker.findReferencesTree",
 					"when": "view == dreammaker-objtree && viewItem == symbol"
 				}
+			],
+			"editor/context": [
+				{
+					"command": "dreammaker.recompile",
+					"when": "editorTextFocus"
+				}
 			]
 		}
 	},
@@ -158,6 +169,7 @@
 	"dependencies": {
 		"mkdirp": "^0.5.1",
 		"node-fetch": "^2.6.0",
+		"npm": "^6.10.2",
 		"vscode-languageclient": "^5.2.1"
 	},
 	"devDependencies": {
@@ -169,7 +181,7 @@
 		"tslint": "^5.18.0",
 		"typescript": "^2.9.2",
 		"vscode": "^1.1.35",
-		"webpack": "^4.35.2",
-		"webpack-cli": "^3.3.5"
+		"webpack": "^4.38.0",
+		"webpack-cli": "^3.3.6"
 	}
 }
