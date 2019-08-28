@@ -74,17 +74,10 @@ export async function activate(context: ExtensionContext) {
 		return await commands.executeCommand("references-view.find", uri, position);
 	}));
 
-	context.subscriptions.push(commands.registerCommand('dreammaker.recompile', async () => {
+	context.subscriptions.push(commands.registerCommand('dreammaker.recompile', async (file: vscode.Uri) => {
 		const activeEditor = vscode.window.activeTextEditor;
 		if (!activeEditor) return;
-		let line = activeEditor.document.lineAt(activeEditor.selection.active.line).text;
-
-		//window.showInformationMessage(line);
-		if (!line.startsWith("/") || !line.endsWith(")")) {
-			window.showErrorMessage("This does not appear to be a proc definition!");
-			return;
-		}
-		lc.sendNotification(extras.Recompile, { command: "ayy lmao", arguments: [line] });
+		lc.sendNotification(extras.Recompile, { textDocument: { uri: file.toString() }, position: activeEditor.selection.active });
 	}));
 
 	// register the docs provider
