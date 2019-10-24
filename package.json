@@ -25,7 +25,11 @@
 	],
 	"activationEvents": [
 		"onLanguage:dm",
-		"workspaceContains:*.dme"
+		"workspaceContains:*.dme",
+		"onCommand:dreammaker.restartLangserver",
+		"onCommand:dreammaker.toggleTicked",
+		"onCommand:dreammaker.openReference",
+		"onCommand:dreammaker.findReferencesTree"
 	],
 	"main": "./dist/extension",
 	"contributes": {
