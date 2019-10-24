@@ -24,7 +24,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onLanguage:dm"
+		"onLanguage:dm",
+		"workspaceContains:*.dme"
 	],
 	"main": "./dist/extension",
 	"contributes": {
