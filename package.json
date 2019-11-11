@@ -150,7 +150,51 @@
 					"when": "view == dreammaker-objtree && viewItem == symbol"
 				}
 			]
-		}
+		},
+		"debuggers": [
+			{
+				"type": "byond",
+				"label": "BYOND",
+				"languages": ["dm"],
+				"configurationAttributes": {
+					"launch": {
+						"required": ["dmb"],
+						"properties": {
+							"dmb": {
+								"type": "string",
+								"description": "Path to the compiled .dmb file to start."
+							}
+						}
+					}
+				},
+				"initialConfigurations": [
+					{
+						"type": "byond",
+						"request": "launch",
+						"name": "Launch DreamSeeker",
+						"preLaunchTask": "dm: build - ${command:CurrentDME}",
+						"dmb": "${workspaceFolder}/${command:CurrentDMB}"
+					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "BYOND: Launch DreamSeeker",
+						"description": "A new configuration by Spac",
+						"body": {
+							"type": "byond",
+							"request": "launch",
+							"name": "Launch DreamSeeker",
+							"preLaunchTask": "^\"dm: build - \\${command:CurrentDME}\"",
+							"dmb": "^\"\\${workspaceFolder}/\\${command:CurrentDMB}\""
+						}
+					}
+				],
+				"variables": {
+					"CurrentDME": "dreammaker.getFilenameDme",
+					"CurrentDMB": "dreammaker.getFilenameDmb"
+				}
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",

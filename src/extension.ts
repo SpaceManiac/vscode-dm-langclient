@@ -74,6 +74,14 @@ export async function activate(context: ExtensionContext) {
 		return await commands.executeCommand("references-view.find", uri, position);
 	}));
 
+	context.subscriptions.push(commands.registerCommand('dreammaker.getFilenameDme', () => {
+		return environment_file;
+	}));
+
+	context.subscriptions.push(commands.registerCommand('dreammaker.getFilenameDmb', () => {
+		return environment_file && environment_file.replace(/\.dme$/, ".dmb");
+	}));
+
 	// register the docs provider
 	docs_provider = new reference.Provider();
 	context.subscriptions.push(workspace.registerTextDocumentContentProvider(docs_provider.scheme, docs_provider));
