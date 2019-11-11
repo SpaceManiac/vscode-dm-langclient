@@ -114,6 +114,24 @@ export async function activate(context: ExtensionContext) {
 		}
 	}));
 
+	// register debugger factory to point at langserver's debugger mode
+	context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('byond', {
+		async createDebugAdapterDescriptor(session: vscode.DebugSession, executable: vscode.DebugAdapterExecutable | undefined): Promise<vscode.DebugAdapterDescriptor | null> {
+			let command = await determine_server_command(context);
+			if (!command) {
+				return null;
+			}
+
+			let dreamseeker_exe = await config.find_byond_file(['bin/dreamseeker.exe']);
+			if (!dreamseeker_exe) {
+				return null;
+			}
+
+			let args = ["--debugger", "--dreamseeker-exe", dreamseeker_exe];
+			return new vscode.DebugAdapterExecutable(command, args);
+		}
+	}));
+
 	// start the language client
 	await start_language_client_catch(context);
 }
