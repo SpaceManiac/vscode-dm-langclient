@@ -240,7 +240,7 @@ async function progress_counter() {
 
 		if (tasks.length == 0) {
 			status.text = `${environment}`;
-			status.tooltip = undefined;
+			status.tooltip = "Reparse environment";
 		} else if (tasks.length == 1) {
 			let element = tasks[0];
 			status.text = `${environment}: ${element}`;
