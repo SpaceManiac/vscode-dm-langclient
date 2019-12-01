@@ -117,8 +117,7 @@ export async function activate(context: ExtensionContext) {
 	// register debugger factory to point at langserver's debugger mode
 	context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('byond', {
 		async createDebugAdapterDescriptor(session: vscode.DebugSession, executable: vscode.DebugAdapterExecutable | undefined): Promise<vscode.DebugAdapterDescriptor | null> {
-			let command = await determine_server_command(context);
-			if (!command) {
+			if (!lc) {
 				return null;
 			}
 
@@ -127,8 +126,8 @@ export async function activate(context: ExtensionContext) {
 				return null;
 			}
 
-			let args = ["--debugger", "--dreamseeker-exe", dreamseeker_exe];
-			return new vscode.DebugAdapterExecutable(command, args);
+			let result = await lc.sendRequest(extras.StartDebugger, { dreamseeker_exe });
+			return new vscode.DebugAdapterServer(result.port);
 		}
 	}));
 

@@ -1,7 +1,7 @@
 // Nonstandard extensions to the LSP used by dm-langserver.
 'use strict';
 
-import { NotificationType, SymbolKind, Location } from 'vscode-languageclient';
+import { NotificationType, SymbolKind, Location, RequestType } from 'vscode-languageclient';
 
 export const WindowStatus: NotificationType<WindowStatusParams, {}> = new NotificationType('$window/status');
 export interface WindowStatusParams {
@@ -31,3 +31,12 @@ export interface ObjectTreeProc extends ObjectTreeEntry {
 }
 
 export const Reparse: NotificationType<{}, {}> = new NotificationType('experimental/dreammaker/reparse');
+
+// params, result, error, registration options
+export const StartDebugger: RequestType<StartDebuggerParams, StartDebuggerResult, void, void> = new RequestType('experimental/dreammaker/startDebugger');
+export interface StartDebuggerParams {
+    dreamseeker_exe: string,
+}
+export interface StartDebuggerResult {
+    port: number,
+}
