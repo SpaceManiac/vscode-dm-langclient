@@ -198,6 +198,11 @@
 					"CurrentDMB": "dreammaker.getFilenameDmb"
 				}
 			}
+		],
+		"breakpoints": [
+			{
+				"language": "dm"
+			}
 		]
 	},
 	"scripts": {
