@@ -169,6 +169,15 @@
 								"description": "Path to the compiled .dmb file to start."
 							}
 						}
+					},
+					"attach": {
+						"properties": {
+							"port": {
+								"type": "number",
+								"description": "Port on which debugger is listening.",
+								"default": 2448
+							}
+						}
 					}
 				},
 				"initialConfigurations": [
@@ -183,13 +192,21 @@
 				"configurationSnippets": [
 					{
 						"label": "BYOND: Launch DreamSeeker",
-						"description": "A new configuration by Spac",
 						"body": {
 							"type": "byond",
 							"request": "launch",
 							"name": "Launch DreamSeeker",
 							"preLaunchTask": "^\"dm: build - \\${command:CurrentDME}\"",
 							"dmb": "^\"\\${workspaceFolder}/\\${command:CurrentDMB}\""
+						}
+					},
+					{
+						"label": "BYOND: Attach to debugger",
+						"body": {
+							"type": "byond",
+							"request": "attach",
+							"name": "Attach to Debugger",
+							"port": 2448
 						}
 					}
 				],
