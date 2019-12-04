@@ -37,6 +37,20 @@ Additional extension features include:
   * Open index with "DreamMaker: Open DM Reference" in the command palette.
   * Look up items with workspace symbol search, go to definition, or object tree.
 
+## Building
+
+1. Install [Node and NPM][node].
+2. Download dependencies: `npm install`
+3. If installing VSCE globally:
+   1. `sudo npm install -g vsce`
+   2. `vsce package`
+4. If installing VSCE locally:
+   1. `npm install vsce`
+   2. `./node_modules/vsce/out/vsce package`
+5. Install produced `.vsix` into Visual Studio Code.
+
+[node]: https://nodejs.org/en/
+
 ## License
 
 DreamMaker Language Client is free software: you can redistribute it and/or modify
