@@ -239,7 +239,7 @@
 		"@types/mkdirp": "^0.5.2",
 		"@types/node": "^7.10.9",
 		"@types/node-fetch": "^1.6.9",
-		"@types/webpack": "^4.39.8",
+		"@types/webpack": "^4.41.0",
 		"ts-loader": "^5.4.5",
 		"tslint": "^5.20.1",
 		"typescript": "^2.9.2",
