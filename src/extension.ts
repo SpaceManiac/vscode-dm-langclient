@@ -114,6 +114,24 @@ export async function activate(context: ExtensionContext) {
 		}
 	}));
 
+	// I don't really know why this is necessary. The debug configuration this
+	// provider returns is the same as the one in "initialConfigurations" in
+	// package.json, but apparently VSC uses that only when creating a new
+	// launch.json and not when handling an F5 press when a launch.json does
+	// not exist.
+	context.subscriptions.push(vscode.debug.registerDebugConfigurationProvider('byond', {
+		async resolveDebugConfiguration(folder: vscode.WorkspaceFolder | undefined, debugConfiguration: vscode.DebugConfiguration, token?: vscode.CancellationToken): Promise<vscode.DebugConfiguration | undefined> {
+			// Called with debugConfiguration = {} if launch.json does not exist.
+			return debugConfiguration.type ? debugConfiguration : {
+				"type": "byond",
+				"request": "launch",
+				"name": "Launch DreamSeeker",
+				"preLaunchTask": "dm: build - ${command:CurrentDME}",
+				"dmb": "${workspaceFolder}/${command:CurrentDMB}",
+				"noDebug": debugConfiguration.noDebug || false,
+			};
+		}
+	}));
 	// register debugger factory to point at langserver's debugger mode
 	context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('byond', {
 		async createDebugAdapterDescriptor(session: vscode.DebugSession, executable: vscode.DebugAdapterExecutable | undefined): Promise<vscode.DebugAdapterDescriptor | null> {

@@ -29,7 +29,8 @@
 		"onCommand:dreammaker.restartLangserver",
 		"onCommand:dreammaker.toggleTicked",
 		"onCommand:dreammaker.openReference",
-		"onCommand:dreammaker.findReferencesTree"
+		"onCommand:dreammaker.findReferencesTree",
+		"onDebugResolve:byond"
 	],
 	"main": "./dist/extension",
 	"contributes": {
