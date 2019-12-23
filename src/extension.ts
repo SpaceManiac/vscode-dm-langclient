@@ -381,6 +381,14 @@ async function auto_update(context: ExtensionContext, platform: string, arch: st
 			let stream = fs.createWriteStream(out_file, { encoding: 'binary', mode: 0o755 });
 			res.body.pipe(stream);
 			await promisify(stream.once, stream)('finish');
+
+			// Unsophisticated integrity check meant to catch network errors.
+			let wanted_hash = res.headers.get('x-md5');
+			if (wanted_hash && wanted_hash != await md5_file(out_file)) {
+				await promisify(fs.unlink)(out_file);
+				return "Download interrupted. Check your network connection and try again.";
+			}
+
 			if (hash && !update_available) {
 				update_available = true;
 				status.text += ' - click to update';
