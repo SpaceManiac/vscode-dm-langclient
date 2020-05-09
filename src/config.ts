@@ -123,7 +123,7 @@ export async function tick_on_create(): Promise<boolean> {
 }
 
 export async function object_tree_pane(): Promise<boolean> {
-    let enabled: boolean | undefined = workspace.getConfiguration('dreammaker').get('objectTree');
+    let enabled: boolean | undefined = workspace.getConfiguration('dreammaker').get('objectTreePane');
     if (typeof enabled === 'boolean') {
         return enabled;
     }
