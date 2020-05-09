@@ -92,6 +92,11 @@
 					"type": "boolean",
 					"default": null,
 					"description": "Whether to automatically tick created/untick deleted code files."
+				},
+				"dreammaker.objectTreePane": {
+					"type": "boolean",
+					"default": null,
+					"description": "Whether the Object Tree pane should be loaded."
 				}
 			}
 		},

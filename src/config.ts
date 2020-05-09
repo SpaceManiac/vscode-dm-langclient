@@ -121,3 +121,12 @@ export async function tick_on_create(): Promise<boolean> {
         return false;
     }
 }
+
+export async function object_tree_pane(): Promise<boolean> {
+    let enabled: boolean | undefined = workspace.getConfiguration('dreammaker').get('objectTree');
+    if (typeof enabled === 'boolean') {
+        return enabled;
+    }
+    // Just default to `false` for now because of the performance penalty involved.
+    return false;
+}
