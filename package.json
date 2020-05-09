@@ -243,7 +243,7 @@
 		"@types/mkdirp": "^1.0.0",
 		"@types/node": "^7.10.10",
 		"@types/node-fetch": "^1.6.9",
-		"@types/vscode": "^1.1.36",
+		"@types/vscode": "^1.30.0",
 		"@types/webpack": "^4.41.12",
 		"ts-loader": "^5.4.5",
 		"tslint": "^5.20.1",
