@@ -66,6 +66,13 @@
 				"category": "DreamMaker"
 			}
 		],
+		"keybindings": [
+			{
+				"command": "dreammaker.restartLangserver",
+				"key": "alt+f5",
+				"when": "editorLangId == 'dm'"
+			}
+		],
 		"configuration": {
 			"type": "object",
 			"title": "DreamMaker language client configuration",
