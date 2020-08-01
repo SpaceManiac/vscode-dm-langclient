@@ -69,7 +69,8 @@
 		"keybindings": [
 			{
 				"command": "dreammaker.restartLangserver",
-				"key": "alt+f5"
+				"key": "alt+f5",
+				"when": "editorLangId == 'dm'"
 			}
 		],
 		"configuration": {
