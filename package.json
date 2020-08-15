@@ -247,15 +247,15 @@
 		"vscode-languageclient": "^5.2.1"
 	},
 	"devDependencies": {
-		"@types/mkdirp": "^1.0.0",
-		"@types/node": "^7.10.10",
+		"@types/mkdirp": "^1.0.1",
+		"@types/node": "^7.10.11",
 		"@types/node-fetch": "^1.6.9",
 		"@types/vscode": "^1.30.0",
-		"@types/webpack": "^4.41.12",
+		"@types/webpack": "^4.41.21",
 		"ts-loader": "^5.4.5",
 		"tslint": "^5.20.1",
 		"typescript": "^2.9.2",
-		"webpack": "^4.43.0",
-		"webpack-cli": "^3.3.11"
+		"webpack": "^4.44.1",
+		"webpack-cli": "^3.3.12"
 	}
 }
