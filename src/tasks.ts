@@ -1,11 +1,9 @@
 // A task provider for running DreamMaker builds.
-import * as fs from 'fs';
 import * as os from 'os';
 import { dirname } from 'path';
-import { TaskProvider, CancellationToken, Task, ProcessExecution, TaskDefinition, workspace, TaskGroup } from "vscode";
+import { TaskProvider, CancellationToken, Task, ProcessExecution, TaskDefinition, workspace, TaskGroup, FileType } from "vscode";
 
 import * as config from './config';
-import { promisify } from './misc';
 
 class DMTask implements TaskDefinition {
     type = 'dreammaker';  // must match package.json
@@ -21,12 +19,10 @@ export class Provider implements TaskProvider {
         let list = [];
         let dm_exe_path;
         for (let folder of (workspace.workspaceFolders || [])) {
-            if (folder.uri.scheme !== 'file') {
-                continue;
-            }
-            let path = folder.uri.fsPath;
-            let files: string[] = await promisify(fs.readdir)(path);
-            for (let file of files) {
+            for (let [file, type] of await workspace.fs.readDirectory(folder.uri)) {
+                if (type == FileType.Directory) {
+                    continue;
+                }
                 if (!file.endsWith('.dme')) {
                     continue;
                 }
@@ -49,7 +45,10 @@ export class Provider implements TaskProvider {
                     folder,
                     `build - ${file}`,
                     "dm",
-                    new ProcessExecution(dm_exe_path, [file], { cwd: path, env: env }),
+                    new ProcessExecution(dm_exe_path, [file], {
+                        cwd: folder.uri.scheme === 'file' ? folder.uri.fsPath : undefined,
+                        env: env
+                    }),
                     '$dreammaker'
                 );
                 task.group = TaskGroup.Build;
