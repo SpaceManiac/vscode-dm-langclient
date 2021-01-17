@@ -30,6 +30,7 @@
 		"onCommand:dreammaker.toggleTicked",
 		"onCommand:dreammaker.openReference",
 		"onCommand:dreammaker.findReferencesTree",
+		"onCommand:dreammaker.returnDreamdaemonPath",
 		"onDebugResolve:byond"
 	],
 	"main": "./dist/extension",
@@ -63,6 +64,11 @@
 			{
 				"command": "dreammaker.findReferencesTree",
 				"title": "Find All References (Object Tree)",
+				"category": "DreamMaker"
+			},
+			{
+				"command": "dreammaker.returnDreamdaemonPath",
+				"title": "Return Dreamdaemon Path",
 				"category": "DreamMaker"
 			}
 		],
@@ -244,6 +250,7 @@
 	"dependencies": {
 		"mkdirp": "^1.0.4",
 		"node-fetch": "^2.6.1",
+		"vsce": "^1.83.0",
 		"vscode-languageclient": "^5.2.1"
 	},
 	"devDependencies": {

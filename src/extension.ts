@@ -82,6 +82,10 @@ export async function activate(context: ExtensionContext) {
 		return environment_file && environment_file.replace(/\.dme$/, ".dmb");
 	}));
 
+	context.subscriptions.push(commands.registerCommand('dreammaker.returnDreamdaemonPath', async () => {
+		return config.find_byond_file(['bin/dreamdaemon.exe'])
+	}));
+
 	// register the docs provider
 	docs_provider = new reference.Provider();
 	context.subscriptions.push(workspace.registerTextDocumentContentProvider(docs_provider.scheme, docs_provider));
