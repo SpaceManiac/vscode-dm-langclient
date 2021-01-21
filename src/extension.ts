@@ -107,8 +107,9 @@ export async function activate(context: ExtensionContext) {
 	context.subscriptions.push(workspace.onDidRenameFiles(async (event) => {
 		if (await config.tick_on_create()) {
 			for (let { oldUri, newUri } of event.files) {
-				await toggle_ticked(oldUri, false);
-				await toggle_ticked(newUri, true);
+				if (await toggle_ticked(oldUri, false)) {
+					await toggle_ticked(newUri, true);
+				}
 			}
 			await update_ticked_status();
 		}
