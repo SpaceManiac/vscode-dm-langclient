@@ -87,21 +87,32 @@ export async function activate(context: ExtensionContext) {
 	context.subscriptions.push(workspace.registerTextDocumentContentProvider(docs_provider.scheme, docs_provider));
 	context.subscriptions.push(window.onDidChangeActiveTextEditor((ed) => docs_provider.check_kill_ed(ed)));
 
-	// create the file system watcher for ticking created/unticking deleted files
-	let watcher = workspace.createFileSystemWatcher(environment.TICKABLE_GLOB, false, true, false);
-	watcher.onDidDelete(async (file_uri) => {
+	// listen to UI delete/create/rename events to do autoticking,
+	// because that's when it matters
+	context.subscriptions.push(workspace.onDidDeleteFiles(async (event) => {
 		if (await config.tick_on_create()) {
-			await toggle_ticked(file_uri, false);
+			for (let file_uri of event.files) {
+				await toggle_ticked(file_uri, false);
+			}
 		}
-	});
-	watcher.onDidCreate(async (file_uri) => {
-		// don't automatically tick new non-code files
-		if (file_uri.fsPath.endsWith(".dm") && await config.tick_on_create()) {
-			await toggle_ticked(file_uri, true);
+	}));
+	context.subscriptions.push(workspace.onDidCreateFiles(async (event) => {
+		if (await config.tick_on_create()) {
+			for (let file_uri of event.files) {
+				await toggle_ticked(file_uri, true);
+			}
 			await update_ticked_status();
 		}
-	});
-	context.subscriptions.push(watcher);
+	}));
+	context.subscriptions.push(workspace.onDidRenameFiles(async (event) => {
+		if (await config.tick_on_create()) {
+			for (let { oldUri, newUri } of event.files) {
+				await toggle_ticked(oldUri, false);
+				await toggle_ticked(newUri, true);
+			}
+			await update_ticked_status();
+		}
+	}));
 
 	// create the task provider for convenient Ctrl+Shift+B
 	context.subscriptions.push(workspace.registerTaskProvider("dreammaker", new tasks.Provider()));
