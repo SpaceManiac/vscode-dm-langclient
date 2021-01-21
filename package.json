@@ -30,6 +30,7 @@
 		"onCommand:dreammaker.toggleTicked",
 		"onCommand:dreammaker.openReference",
 		"onCommand:dreammaker.findReferencesTree",
+		"onCommand:dreammaker.returnDreamdaemonPath",
 		"onDebugResolve:byond"
 	],
 	"main": "./dist/extension",
