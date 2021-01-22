@@ -83,7 +83,7 @@ export async function activate(context: ExtensionContext) {
 	}));
 
 	context.subscriptions.push(commands.registerCommand('dreammaker.returnDreamDaemonPath', async () => {
-		return config.find_byond_file(['bin/dreamdaemon.exe'])
+		return config.find_byond_file(['bin/dreamdaemon.exe', 'bin/DreamDaemon']);
 	}));
 
 	// register the docs provider
