@@ -28,7 +28,7 @@ export class Provider implements TaskProvider {
                 }
 
                 if (!dm_exe_path) {
-                    dm_exe_path = await config.find_byond_file(['bin/dm.exe', 'bin/DreamMaker']);
+                    dm_exe_path = await config.find_byond_file(config.DREAM_MAKER);
                     if (!dm_exe_path) {
                         // not configured
                         return [];

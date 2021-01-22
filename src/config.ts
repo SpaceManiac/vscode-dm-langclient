@@ -30,6 +30,9 @@ async function validate_byond_path(path: string): Promise<boolean> {
     return await exists(`${path}/bin/dm.exe`) || await exists(`${path}/bin/DreamMaker`);
 }
 
+export const DREAM_MAKER: string[] = ['bin/dm.exe', 'bin/DreamMaker'];
+export const DREAM_DAEMON: string[] = ['bin/dreamdaemon.exe', 'bin/DreamDaemon'];
+export const DREAM_SEEKER: string[] = ['bin/dreamseeker.exe'];
 export async function find_byond_file(nameset: string[]): Promise<string | undefined> {
     // If it's specified use it right away.
     let directories: string | string[] | undefined = workspace.getConfiguration('dreammaker').get('byondPath');

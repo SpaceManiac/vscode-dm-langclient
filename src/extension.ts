@@ -83,7 +83,7 @@ export async function activate(context: ExtensionContext) {
 	}));
 
 	context.subscriptions.push(commands.registerCommand('dreammaker.returnDreamDaemonPath', async () => {
-		return config.find_byond_file(['bin/dreamdaemon.exe', 'bin/DreamDaemon']);
+		return config.find_byond_file(config.DREAM_DAEMON);
 	}));
 
 	// register the docs provider
@@ -155,7 +155,7 @@ export async function activate(context: ExtensionContext) {
 				return null;
 			}
 
-			let dreamseeker_exe = await config.find_byond_file(['bin/dreamseeker.exe']);
+			let dreamseeker_exe = await config.find_byond_file(session.configuration.dreamDaemon ? config.DREAM_DAEMON : config.DREAM_SEEKER);
 			if (!dreamseeker_exe) {
 				return null;
 			}

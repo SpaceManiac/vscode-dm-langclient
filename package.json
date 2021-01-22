@@ -181,6 +181,10 @@
 							"dmb": {
 								"type": "string",
 								"description": "Path to the compiled .dmb file to start."
+							},
+							"dreamDaemon": {
+								"type": "boolean",
+								"description": "Set to 'true' to launch Dream Daemon instead."
 							}
 						}
 					},
