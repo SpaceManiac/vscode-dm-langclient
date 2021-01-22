@@ -7,14 +7,14 @@ import * as fs from 'fs';
 export function promisify(func: Function, this_: any = undefined): Function {
 	return (...args: any[]) => {
 		return new Promise((resolve, reject: any) => {
-			args.push((err: any, ...rest: any[]) => {
+			args.push((err: any, ok: any) => {
 				if (err) {
 					if (reject) {
 						reject(err);
 						reject = null;
 					}
 				} else {
-					resolve.apply(undefined, rest);
+					resolve.call(undefined, ok);
 				}
 			});
 			try {
