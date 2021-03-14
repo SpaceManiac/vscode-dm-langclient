@@ -31,6 +31,7 @@
 		"onCommand:dreammaker.openReference",
 		"onCommand:dreammaker.findReferencesTree",
 		"onCommand:dreammaker.returnDreamdaemonPath",
+		"onCommand:dreammaker.reparse",
 		"onDebugResolve:byond"
 	],
 	"main": "./dist/extension",
