@@ -86,6 +86,12 @@ export async function activate(context: ExtensionContext) {
 		return config.find_byond_file(config.DREAM_DAEMON);
 	}));
 
+	context.subscriptions.push(commands.registerCommand('dreammaker.reparse', async () => {
+		if (lc) {
+			lc.sendNotification(extras.Reparse, {});
+		}
+	}));
+
 	// register the docs provider
 	docs_provider = new reference.Provider();
 	context.subscriptions.push(workspace.registerTextDocumentContentProvider(docs_provider.scheme, docs_provider));
