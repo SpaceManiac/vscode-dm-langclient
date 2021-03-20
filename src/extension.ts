@@ -126,7 +126,7 @@ export async function activate(context: ExtensionContext) {
 	}));
 
 	// create the task provider for convenient Ctrl+Shift+B
-	context.subscriptions.push(workspace.registerTaskProvider("dreammaker", new tasks.Provider()));
+	context.subscriptions.push(vscode.tasks.registerTaskProvider("dreammaker", new tasks.Provider()));
 	context.subscriptions.push(vscode.tasks.onDidStartTask((event) => {
 		// Checking .type will get us "process", because the task has already
 		// been resolved. Just see if the name looks like a ".dme" file.
