@@ -1,11 +1,12 @@
 {
     "fileTypes": [
         "dm",
-        "dme"
+        "dme",
+        "dmm"
     ],
     "foldingStartMarker": "(?x)\n/\\*\\*(?!\\*)\n|^(?![^{]*?//|[^{]*?/\\*(?!.*?\\*/.*?\\{)).*?\\{\\s*($|//|/\\*(?!.*?\\*/.*\\S))",
     "foldingStopMarker": "(?<!\\*)\\*\\*/|^\\s*\\}",
-    "name": "Dream Maker",
+    "name": "DreamMaker",
     "patterns": [
         {
             "include": "#preprocessor-rule-enabled"
