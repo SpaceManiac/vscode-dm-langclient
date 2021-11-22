@@ -269,12 +269,12 @@
 		"@types/mkdirp": "^1.0.2",
 		"@types/node": "^7.10.14",
 		"@types/node-fetch": "^1.6.9",
-		"@types/vscode": "^1.62.0",
+		"@types/vscode": "^1.30.0",
 		"@types/webpack": "^4.41.32",
 		"ts-loader": "^5.4.5",
 		"tslint": "^5.20.1",
 		"typescript": "^3.9.10",
-		"webpack": "^4.46.0",
-		"webpack-cli": "^3.3.12"
+		"webpack": "^5.64.2",
+		"webpack-cli": "^4.9.1"
 	}
 }
