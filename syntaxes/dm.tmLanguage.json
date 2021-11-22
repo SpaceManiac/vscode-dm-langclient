@@ -112,7 +112,7 @@
                     "name": "punctuation.definition.string.begin.dm"
                 }
             },
-            "end": "\\1",
+            "end": "\\1|$",
             "endCaptures": {
                 "0": {
                     "name": "punctuation.definition.string.end.dm"
@@ -149,7 +149,7 @@
                     "name": "punctuation.definition.string.begin.dm"
                 }
             },
-            "end": "\"",
+            "end": "\"|[^\\\\]$",
             "endCaptures": {
                 "0": {
                     "name": "punctuation.definition.string.end.dm"
@@ -172,7 +172,7 @@
                     "name": "punctuation.definition.string.begin.dm"
                 }
             },
-            "end": "'",
+            "end": "'|[^\\\\]$",
             "endCaptures": {
                 "0": {
                     "name": "punctuation.definition.string.end.dm"
@@ -181,7 +181,8 @@
             "name": "string.quoted.single.dm",
             "patterns": [
                 {
-                    "include": "#string_escaped_char"
+                    "match": "\\\\(.|\\n)",
+                    "name": "constant.character.escape.dm"
                 }
             ]
         },
