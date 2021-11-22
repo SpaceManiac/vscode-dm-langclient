@@ -656,12 +656,15 @@
         "string_embedded_expression": {
             "patterns": [
                 {
-                    "begin": "(?<!\\\\)\\[",
+                    "begin": "\\[",
                     "end": "\\]",
                     "name": "string.interpolated.dm",
                     "patterns": [
                         {
-                            "include": "$self"
+                            "include": "#string_embedded_expression"
+                        },
+                        {
+                            "include": "$base"
                         }
                     ]
                 }
