@@ -42,7 +42,7 @@
             "name": "constant.numeric.dm"
         },
         {
-            "match": "\\b(sleep|spawn|break|continue|do|else|for|goto|if|return|switch|while)\\b",
+            "match": "\\b(sleep|spawn|break|continue|do|else|for|goto|if|return|switch|while|try|catch|throw)\\b",
             "name": "keyword.control.dm"
         },
         {
