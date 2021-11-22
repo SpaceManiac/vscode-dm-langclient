@@ -367,7 +367,7 @@
                             "name": "punctuation.definition.comment.dm"
                         }
                     },
-                    "end": "$\\n?",
+                    "end": "[^\\\\]$",
                     "name": "comment.line.double-slash.dm",
                     "patterns": [
                         {
