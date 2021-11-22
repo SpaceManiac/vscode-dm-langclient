@@ -90,13 +90,28 @@
         },
         {
             "name": "string.quoted.other.dm",
-            "begin": "@\"",
+            "begin": "@\\(([^)]+)\\)",
             "beginCaptures": {
                 "1": {
                     "name": "punctuation.definition.string.begin.dm"
                 }
             },
-            "end": "\"",
+            "end": "\\1",
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.definition.string.end.dm"
+                }
+            }
+        },
+        {
+            "name": "string.quoted.other.dm",
+            "begin": "@(.)",
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.definition.string.begin.dm"
+                }
+            },
+            "end": "\\1",
             "endCaptures": {
                 "0": {
                     "name": "punctuation.definition.string.end.dm"
