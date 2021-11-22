@@ -39,11 +39,24 @@
 		"languages": [
 			{
 				"id": "dm",
+				"aliases": [
+					"Dream Maker",
+					"dm",
+					"byond"
+				],
 				"extensions": [
 					".dm",
 					".dme",
 					".dmm"
-				]
+				],
+				"configuration": "./syntaxes/dm.language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "dm",
+				"scopeName": "source.dm",
+				"path": "./syntaxes/dm.tmLanguage.json"
 			}
 		],
 		"commands": [
