@@ -673,7 +673,7 @@
         "string_escaped_char": {
             "patterns": [
                 {
-                    "match": "(?x)\n\\\\\n(\n\th(?:(?:er|im)self|ers|im)\n\t|([tTsS]?he) # Weird regex to match The, the, She, she and he at once.\n\t|He\n\t|[Hh]is\n\t|[aA]n?\n\t|(?:im)?proper\n\t|\\.\\.\\.\n\t|(?:icon|ref|[Rr]oman)(?=\\[) # Macros which need a [] after them.\n\t|[s<>\"n\\n \\[]\n)",
+                    "match": "\\\\([Tt]he|[Aa]|[Aa]n|[Hh]e|[Ss]he|[Hh]is|him|himself|herself|hers|proper|improper|th|s|(icon|ref|[Rr]oman)(?=\\[)|\\.\\.\\.|t|n|\"|\\\\|<|>| |\n|\\[|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{6})",
                     "name": "constant.character.escape.dm"
                 },
                 {
