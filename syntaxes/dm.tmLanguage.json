@@ -59,9 +59,12 @@
             "name": "storage.modifier.dm"
         },
         {
-            "match": "/(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|list|matrix|mob|mutable_appearance|obj|particles|regex|savefile|sound|turf|world)\\b",
+            "match": "(/)(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|list|matrix|mob|mutable_appearance|obj|particles|regex|savefile|sound|turf|world)\\b",
             "captures": {
                 "1": {
+                    "name": "keyword.operator.dm"
+                },
+                "2": {
                     "name": "support.class.dm"
                 }
             }
@@ -136,48 +139,68 @@
             }
         },
         {
-            "begin": "{\"",
+            "begin": "({\")",
             "beginCaptures": {
                 "0": {
+                    "name": "string.quoted.triple.dm"
+                },
+                "1": {
                     "name": "punctuation.definition.string.begin.dm"
                 }
             },
-            "end": "\"}",
+            "end": "(\"})",
             "endCaptures": {
                 "0": {
+                    "name": "string.quoted.triple.dm"
+                },
+                "1": {
                     "name": "punctuation.definition.string.end.dm"
                 }
             },
-            "name": "string.quoted.triple.dm",
+            "name": "meta.interpstring.dm",
             "patterns": [
                 {
                     "include": "#string_escaped_char"
                 },
                 {
                     "include": "#string_embedded_expression"
+                },
+                {
+                    "match": ".",
+                    "name": "string.quoted.triple.dm"
                 }
             ]
         },
         {
-            "begin": "\"",
+            "begin": "(\")",
             "beginCaptures": {
                 "0": {
+                    "name": "string.quoted.double.dm"
+                },
+                "1": {
                     "name": "punctuation.definition.string.begin.dm"
                 }
             },
-            "end": "\"|[^\\\\]$",
+            "end": "(\"|[^\\\\]$)",
             "endCaptures": {
                 "0": {
+                    "name": "string.quoted.double.dm"
+                },
+                "1": {
                     "name": "punctuation.definition.string.end.dm"
                 }
             },
-            "name": "string.quoted.double.dm",
+            "name": "meta.interpstring.dm",
             "patterns": [
                 {
                     "include": "#string_escaped_char"
                 },
                 {
                     "include": "#string_embedded_expression"
+                },
+                {
+                    "match": ".",
+                    "name": "string.quoted.double.dm"
                 }
             ]
         },
@@ -674,9 +697,25 @@
         "string_embedded_expression": {
             "patterns": [
                 {
-                    "begin": "\\[",
-                    "end": "\\]",
-                    "name": "string.interpolated.dm",
+                    "begin": "(\\[)",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "string.quoted.other.dm"
+                        },
+                        "1": {
+                            "name": "punctuation.definition.string.end.dm"
+                        }
+                    },
+                    "end": "(\\])",
+                    "endCaptures": {
+                        "0": {
+                            "name": "string.quoted.other.dm"
+                        },
+                        "1": {
+                            "name": "punctuation.definition.string.begin.dm"
+                        }
+                    },
+                    "name": "meta.interpolation.dm",
                     "patterns": [
                         {
                             "include": "#string_embedded_expression"
