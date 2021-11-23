@@ -67,11 +67,19 @@
             }
         },
         {
+            "match": "\\b(list|call|input|locate|pick|arglist)(?>\\s*\\()",
+            "captures": {
+                "1": {
+                    "name": "support.function.dm"
+                }
+            }
+        },
+        {
             "match": "\\b(usr|world|src|args|vars)\\b",
             "name": "variable.language.dm"
         },
         {
-            "match": "(\\?|(>|<)(=)?|\\.|:|/(=)?|~|\\+(\\+|=)?|-(-|=)?|\\*(\\*|=)?|%|>>|<<|=(=)?|!(=)?|<>|&|&&|\\^|\\||\\|\\||\\bto\\b|\\bin\\b|\\bstep\\b)",
+            "match": "(\\?|(>|<)(=)?|\\.|:|/(=)?|~|\\+(\\+|=)?|-(-|=)?|\\*(\\*|=)?|%|>>|<<|=(=)?|!(=)?|<>|&|&&|\\^|\\||\\|\\||\\b(to|in|step)\\b)",
             "name": "keyword.operator.dm"
         },
         {
