@@ -70,6 +70,17 @@
             }
         },
         {
+            "match": "(\\(|,)\\s*(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|list|matrix|mob|mutable_appearance|obj|particles|regex|savefile|sound|turf|world)(?=/)",
+            "captures": {
+                "1": {
+                    "name": "keyword.operator.dm"
+                },
+                "2": {
+                    "name": "support.class.dm"
+                }
+            }
+        },
+        {
             "match": "\\b(list|call|input|locate|pick|arglist)(?>\\s*\\()",
             "captures": {
                 "1": {
