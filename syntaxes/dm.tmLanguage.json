@@ -718,12 +718,24 @@
                     "name": "meta.interpolation.dm",
                     "patterns": [
                         {
-                            "include": "#string_embedded_expression"
+                            "include": "#string_embedded_expression_2"
                         },
                         {
                             "include": "$base"
                         }
                     ]
+                }
+            ]
+        },
+        "string_embedded_expression_2": {
+            "begin": "(\\[)",
+            "end": "(\\])",
+            "patterns": [
+                {
+                    "include": "#string_embedded_expression_2"
+                },
+                {
+                    "include": "$base"
                 }
             ]
         },
