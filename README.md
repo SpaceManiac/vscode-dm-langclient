@@ -2,14 +2,12 @@
 
 This VS Code extension acts as a client to the [DreamMaker language server][ls],
 a component of [SpacemanDMM]. It provides language-related services for
-DreamMaker, the scripting language of the [BYOND] engine.
-It is currently best used in tandem with the [BYOND DM Language Support]
-extension, which provides syntax highlighting.
+DreamMaker, the scripting language of the [BYOND] engine. It also includes
+syntax highlighting definitions.
 
 [ls]: https://github.com/SpaceManiac/SpacemanDMM/tree/master/src/langserver
 [SpacemanDMM]: https://github.com/SpaceManiac/SpacemanDMM/
 [Byond]: https://secure.byond.com/
-[BYOND DM Language Support]: https://marketplace.visualstudio.com/items?itemName=gbasood.byond-dm-language-support
 
 The extension has an optional auto-update feature for the language server, with
 binaries available for Windows and Linux. On other platforms, the path to the
