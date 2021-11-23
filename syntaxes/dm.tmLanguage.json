@@ -21,7 +21,7 @@
             "include": "#comments"
         },
         {
-            "match": "(var)[\\/ ](?:(static|global|tmp|const)\\/)?(?:(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|list|matrix|mob|mutable_appearance|obj|particles|regex|savefile|sound|turf|world)\\/)?(?:([a-zA-Z0-9_\\-$]*)\\/)*([A-Za-z0-9_$]*)\\b",
+            "match": "(var)[\\/ ](?:(static|global|tmp|const)\\/)?(?:(area|atom(?:/movable)?|client|database(?:/query)?|datum|exception|generator|icon|image|list|matrix|mob|mutable_appearance|obj|particles|regex|savefile|sound|turf|world)\\/)?(?:([a-zA-Z0-9_\\-$]*)\\/)*([A-Za-z0-9_$]*)\\b",
             "name": "meta.initialization.dm",
             "captures": {
                 "1": {
