@@ -106,10 +106,10 @@
             }
         },
         {
-            "name": "string.quoted.other.dm",
+            "name": "string.unquoted.dm",
             "begin": "@\\(([^)]+)\\)",
             "beginCaptures": {
-                "1": {
+                "0": {
                     "name": "punctuation.definition.string.begin.dm"
                 }
             },
@@ -124,7 +124,7 @@
             "name": "string.quoted.other.dm",
             "begin": "@(.)",
             "beginCaptures": {
-                "1": {
+                "0": {
                     "name": "punctuation.definition.string.begin.dm"
                 }
             },
