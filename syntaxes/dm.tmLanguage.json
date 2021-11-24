@@ -482,7 +482,7 @@
         "disabled": {
             "begin": "^\\s*#\\s*if(n?def)?\\b.*$",
             "comment": "eat nested preprocessor if(def)s",
-            "end": "^\\s*#\\s*endif\\b.*$",
+            "end": "^\\s*#\\s*endif\\b",
             "patterns": [
                 {
                     "include": "#disabled"
@@ -524,7 +524,7 @@
                             "name": "keyword.control.import.else.dm"
                         }
                     },
-                    "end": "(?=^\\s*#\\s*endif\\b.*$)",
+                    "end": "(?=^\\s*#\\s*endif\\b)",
                     "patterns": [
                         {
                             "include": "$base"
@@ -533,7 +533,7 @@
                 },
                 {
                     "begin": "",
-                    "end": "(?=^\\s*#\\s*(else|endif)\\b.*$)",
+                    "end": "(?=^\\s*#\\s*(else|endif)\\b)",
                     "name": "comment.block.preprocessor.if-branch",
                     "patterns": [
                         {
@@ -568,7 +568,7 @@
                             "name": "keyword.control.import.else.dm"
                         }
                     },
-                    "end": "(?=^\\s*#\\s*endif\\b.*$)",
+                    "end": "(?=^\\s*#\\s*endif\\b)",
                     "patterns": [
                         {
                             "include": "#block_innards"
@@ -577,7 +577,7 @@
                 },
                 {
                     "begin": "",
-                    "end": "(?=^\\s*#\\s*(else|endif)\\b.*$)",
+                    "end": "(?=^\\s*#\\s*(else|endif)\\b)",
                     "name": "comment.block.preprocessor.if-branch.in-block",
                     "patterns": [
                         {
@@ -613,7 +613,7 @@
                         }
                     },
                     "contentName": "comment.block.preprocessor.else-branch",
-                    "end": "(?=^\\s*#\\s*endif\\b.*$)",
+                    "end": "(?=^\\s*#\\s*endif\\b)",
                     "patterns": [
                         {
                             "include": "#disabled"
@@ -622,7 +622,7 @@
                 },
                 {
                     "begin": "",
-                    "end": "(?=^\\s*#\\s*(else|endif)\\b.*$)",
+                    "end": "(?=^\\s*#\\s*(else|endif)\\b)",
                     "patterns": [
                         {
                             "include": "$base"
@@ -657,7 +657,7 @@
                         }
                     },
                     "contentName": "comment.block.preprocessor.else-branch.in-block",
-                    "end": "(?=^\\s*#\\s*endif\\b.*$)",
+                    "end": "(?=^\\s*#\\s*endif\\b)",
                     "patterns": [
                         {
                             "include": "#disabled"
@@ -666,7 +666,7 @@
                 },
                 {
                     "begin": "",
-                    "end": "(?=^\\s*#\\s*(else|endif)\\b.*$)",
+                    "end": "(?=^\\s*#\\s*(else|endif)\\b)",
                     "patterns": [
                         {
                             "include": "#block_innards"
@@ -685,7 +685,7 @@
                     "name": "keyword.control.import.dm"
                 }
             },
-            "end": "^\\s*((#\\s*(endif))\\b).*$",
+            "end": "^\\s*((#\\s*(endif))\\b)",
             "patterns": [
                 {
                     "include": "$base"
@@ -702,7 +702,7 @@
                     "name": "keyword.control.import.dm"
                 }
             },
-            "end": "^\\s*(#\\s*(endif)\\b).*$",
+            "end": "^\\s*(#\\s*(endif)\\b)",
             "patterns": [
                 {
                     "include": "#block_innards"
