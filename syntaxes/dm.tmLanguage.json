@@ -500,7 +500,7 @@
             ]
         },
         "preprocessor-rule-disabled": {
-            "begin": "^\\s*(#(if)\\s+(0)\\b).*",
+            "begin": "^\\s*(#(if)\\s+(0+|FALSE)\\b).*",
             "captures": {
                 "1": {
                     "name": "meta.preprocessor.dm"
@@ -544,7 +544,7 @@
             ]
         },
         "preprocessor-rule-disabled-block": {
-            "begin": "^\\s*(#(if)\\s+(0)\\b).*",
+            "begin": "^\\s*(#(if)\\s+(0+|FALSE)\\b).*",
             "captures": {
                 "1": {
                     "name": "meta.preprocessor.dm"
@@ -588,7 +588,7 @@
             ]
         },
         "preprocessor-rule-enabled": {
-            "begin": "^\\s*(#(if)\\s+(0*1)\\b)",
+            "begin": "^\\s*(#(if)\\s+(0*1|TRUE)\\b)",
             "captures": {
                 "1": {
                     "name": "meta.preprocessor.dm"
@@ -632,7 +632,7 @@
             ]
         },
         "preprocessor-rule-enabled-block": {
-            "begin": "^\\s*(#(if)\\s+(0*1)\\b)",
+            "begin": "^\\s*(#(if)\\s+(0*1|TRUE)\\b)",
             "captures": {
                 "1": {
                     "name": "meta.preprocessor.dm"
