@@ -97,7 +97,11 @@
             "name": "keyword.operator.dm"
         },
         {
-            "match": "\\b([A-Z_][A-Z_0-9]*)\\b",
+            "match": "\\b(DM_BUILD|DM_VERSION|__FILE__|__LINE__|__MAIN__|DEBUG|FILE_DIR|TRUE|FALSE)\\b",
+            "name": "constant.language.dm"
+        },
+        {
+            "match": "\\b([A-Z_][A-Z_0-9]+)\\b",
             "name": "constant.language.dm"
         },
         {
