@@ -81,7 +81,7 @@
             }
         },
         {
-            "match": "\\b(list|call|input|locate|pick|arglist)(?>\\s*\\()",
+            "match": "\\b(list|call|input|locate|pick|arglist|CRASH|ASSERT|EXCEPTION|REGEX_QUOTE|REGEX_QUOTE_REPLACEMENT)(?>\\s*\\()",
             "captures": {
                 "1": {
                     "name": "support.function.dm"
