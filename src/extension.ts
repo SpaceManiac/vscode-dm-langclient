@@ -420,6 +420,9 @@ async function auto_update(context: ExtensionContext, platform: string, arch: st
 	switch (res.status) {
 		case 200:  // New version
 			let stream = fs.createWriteStream(out_file, { encoding: 'binary', mode: 0o755 });
+			if (!res.body) {
+				return "Download failed: no body returned.";
+			}
 			res.body.pipe(stream);
 			await promisify(stream.once, stream)('finish');
 
