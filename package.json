@@ -276,7 +276,7 @@
 		"@types/node-fetch": "^1.6.9",
 		"@types/vscode": "^1.30.0",
 		"@types/webpack": "^4.41.32",
-		"ts-loader": "^5.4.5",
+		"ts-loader": "^9.4.2",
 		"tslint": "^5.20.1",
 		"typescript": "^3.9.10",
 		"webpack": "^5.64.2",
