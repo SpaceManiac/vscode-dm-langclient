@@ -5,7 +5,7 @@ a component of [SpacemanDMM]. It provides language-related services for
 DreamMaker, the scripting language of the [BYOND] engine. It also includes
 syntax highlighting definitions.
 
-[ls]: https://github.com/SpaceManiac/SpacemanDMM/tree/master/src/langserver
+[ls]: https://github.com/SpaceManiac/SpacemanDMM/tree/master/crates/dm-langserver
 [SpacemanDMM]: https://github.com/SpaceManiac/SpacemanDMM/
 [Byond]: https://secure.byond.com/
 
