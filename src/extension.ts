@@ -247,6 +247,8 @@ async function start_language_client(context: ExtensionContext) {
 		return;
 	}
 
+	status.tooltip = command;
+
 	const serverOptions: languageclient.Executable = {
 		command: command,
 		args: []
