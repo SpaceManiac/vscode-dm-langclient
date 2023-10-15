@@ -311,6 +311,22 @@
             ]
         },
         {
+            "begin": "^\\s*(#\\s*pragma)\\b",
+            "captures": {
+                "1": {
+                    "name": "keyword.control.directive.pragma.dm"
+                }
+            },
+            "end": "$",
+            "name": "meta.preprocessor.diagnostic.dm",
+            "patterns": [
+                {
+                    "match": "(?>\\\\\\s*\\n)",
+                    "name": "punctuation.separator.continuation.dm"
+                }
+            ]
+        },
+        {
             "begin": "^\\s*(?:((#)\\s*(?:elif|else|if|ifdef|ifndef))|((#)\\s*(undef|include)))\\b",
             "beginCaptures": {
                 "1": {
