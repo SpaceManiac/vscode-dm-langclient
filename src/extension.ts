@@ -125,6 +125,14 @@ export async function activate(context: ExtensionContext) {
 		}
 	}));
 
+	context.subscriptions.push(workspace.onDidSaveTextDocument(async (event) => {
+		if (await config.reparse_on_save()) {
+			if (lc) {
+				lc.sendNotification(extras.Reparse, {});
+			}
+		}
+	}));
+
 	// create the task provider for convenient Ctrl+Shift+B
 	context.subscriptions.push(vscode.tasks.registerTaskProvider("dreammaker", new tasks.Provider()));
 	context.subscriptions.push(vscode.tasks.onDidStartTask((event) => {

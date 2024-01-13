@@ -124,6 +124,11 @@
 				"dreammaker.httpSystemCertificatesHack": {
 					"type": "boolean",
 					"default": null
+				},
+				"dreammaker.reparseOnSave": {
+					"type": "boolean",
+					"default": null,
+					"description": "Whether to automatically reparse the environment on save."
 				}
 			}
 		},
