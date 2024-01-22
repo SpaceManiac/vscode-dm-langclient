@@ -7,7 +7,7 @@ import { workspace, window, commands, ExtensionContext, StatusBarItem, StatusBar
 import * as vscode from 'vscode';
 import * as languageclient from 'vscode-languageclient';
 import fetch from 'node-fetch';
-import * as mkdirp from 'mkdirp';
+import { mkdirp } from 'mkdirp';
 import * as path from 'path';
 
 import { promisify, is_executable, md5_file, sleep } from './misc';
@@ -44,7 +44,7 @@ export async function activate(context: ExtensionContext) {
 		update_available = false;
 		try {
 			await lc.stop();
-		} catch(_) {}
+		} catch (_) { }
 		return start_language_client_catch(context);
 	}));
 	context.subscriptions.push(commands.registerCommand('dreammaker.toggleTicked', async () => {
@@ -359,7 +359,7 @@ async function update_copy(main_file: string, update_file: string) {
 		try {
 			await promisify(fs.rename)(update_file, main_file);
 			return;
-		} catch(e) {}
+		} catch (e) { }
 		// If this fails, it might be because the old process is still
 		// running in this window. Wait a bit and try again.
 		await sleep(250);
@@ -445,7 +445,7 @@ async function auto_update(context: ExtensionContext, platform: string, arch: st
 			if (hash) {
 				return;
 			}
-			// if hash is not set, fallthrough
+		// if hash is not set, fallthrough
 		case 404:  // Not found
 			return `Binaries are not available for ${arch}-${platform}.`;
 		case 410:  // Endpoint removed

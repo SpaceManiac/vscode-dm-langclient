@@ -58,7 +58,7 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
                     arguments: [uri.fragment],
                 };
             } else {
-                let uri = Uri.parse(element.location.uri).with({fragment: `${1 + element.location.range.start.line}`});
+                let uri = Uri.parse(element.location.uri).with({ fragment: `${1 + element.location.range.start.line}` });
                 item.command = {
                     title: "Go to Definition",
                     command: 'vscode.open',
@@ -128,8 +128,8 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
 
 export class ObjectTreeFeature implements StaticFeature {
     fillClientCapabilities(capabilities: ClientCapabilities): void {
-        let experimental = (capabilities.experimental || (capabilities.experimental = {}));
-        let dreammaker = (experimental.dreammaker || (experimental.dreammaker = {}));
+        let experimental: { dreammaker?: any } = (capabilities.experimental || (capabilities.experimental = {}));
+        let dreammaker: any = (experimental.dreammaker || (experimental.dreammaker = {}));
         dreammaker.objectTree = true;
     }
 

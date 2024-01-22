@@ -40,10 +40,10 @@ Additional extension features include:
 1. Install [Node and NPM][node].
 2. Download dependencies: `npm install`
 3. If installing VSCE globally:
-   1. `sudo npm install -g vsce`
+   1. `sudo npm install -g @vscode/vsce`
    2. `vsce package`
 4. If installing VSCE locally:
-   1. `npm install vsce`
+   1. `npm install @vscode/vsce`
    2. `./node_modules/vsce/out/vsce package`
 5. Install produced `.vsix` into Visual Studio Code.
 
