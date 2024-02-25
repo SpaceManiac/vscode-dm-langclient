@@ -133,3 +133,12 @@ export async function object_tree_pane(): Promise<boolean> {
     // Just default to `false` for now because of the performance penalty involved.
     return false;
 }
+
+export async function reparse_on_save(): Promise<boolean> {
+    let enabled: boolean | undefined = workspace.getConfiguration('dreammaker').get('reparseOnSave');
+    if (typeof enabled === 'boolean') {
+        return enabled;
+    }
+    // Default to `false` for now because reparsing can take up to 30s+ on older machines.
+    return false;
+}
