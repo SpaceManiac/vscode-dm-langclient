@@ -11,7 +11,9 @@ syntax highlighting definitions.
 
 The extension has an optional auto-update feature for the language server, with
 binaries available for Windows and Linux. On other platforms, the path to the
-`dm-langserver` binary may be specified manually.
+`dm-langserver` binary must be specified manually.
+
+For other platforms such as macOS/darwin, you'll need to clone the source repository for the dm-langserver linked above. Once cloned, with rust installed, you'll follow that repo's README to compile the langserver (takes about 7 minutes without rust already having the dependencies cached). In the resulting '/target/release/' directory in the repo's root folder, you'll find 'dm-langserver'. When opening a repo with a .dme, I.E. tgstation - this extension will prompt you to find your dm-langserver executable and select it. (Be sure to not enable auto-update when prompted, the autoupdate server will not contain darwin/x64 binaries)
 
 Language server features include:
 
