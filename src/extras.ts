@@ -36,6 +36,7 @@ export const Reparse: NotificationType<{}, {}> = new NotificationType('experimen
 export const StartDebugger: RequestType<StartDebuggerParams, StartDebuggerResult, void, void> = new RequestType('experimental/dreammaker/startDebugger');
 export interface StartDebuggerParams {
     dreamseeker_exe: string,
+    env: Record<string, string> | undefined,
 }
 export interface StartDebuggerResult {
     port: number,

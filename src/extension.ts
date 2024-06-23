@@ -174,7 +174,9 @@ export async function activate(context: ExtensionContext) {
 				return null;
 			}
 
-			let result = await lc.sendRequest(extras.StartDebugger, { dreamseeker_exe });
+			let env = session.configuration.env;
+
+			let result = await lc.sendRequest(extras.StartDebugger, { dreamseeker_exe, env });
 			return new vscode.DebugAdapterServer(result.port);
 		}
 	}));

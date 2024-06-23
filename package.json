@@ -209,6 +209,10 @@
 							"dreamDaemon": {
 								"type": "boolean",
 								"description": "Set to 'true' to launch Dream Daemon instead."
+							},
+							"env": {
+								"type": "object",
+								"description": "Environment variables to set."
 							}
 						}
 					},
