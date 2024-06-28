@@ -141,7 +141,7 @@
 					"${workspaceFolder}"
 				],
 				"pattern": {
-					"regexp": "^([^:]+):(\\d+):([^:]+): (.*)$",
+					"regexp": "^([^:]+):(\\d+):(\\w+)[^:]*: (.*)$",
 					"file": 1,
 					"line": 2,
 					"severity": 3,
