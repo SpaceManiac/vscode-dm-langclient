@@ -1,0 +1,23 @@
+name: File sync
+
+on:
+  push:
+    branches: [ "master" ]
+    paths: 
+      - ".github/workflows/sync.yml"
+      - "syntaxes/dm.tmLanguage.json"
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout local repository
+        uses: actions/checkout@v4
+      - name: Sync remote repository
+        uses: kbrashears5/github-action-file-sync@e2715cb544edee3eff1aae1efbca9be0136e276f
+        with:
+          REPOSITORIES: |
+            spacestation13/dm-syntax@master
+          FILES: |
+            syntaxes/dm.tmLanguage.json
+          TOKEN: ${{ secrets.SYNC_TOKEN }}
