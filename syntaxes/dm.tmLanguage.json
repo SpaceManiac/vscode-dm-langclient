@@ -478,7 +478,7 @@
                     "name": "comment.line.banner.dm"
                 },
                 {
-                    "begin": "//",
+                    "begin": "(?<!:)//",
                     "beginCaptures": {
                         "0": {
                             "name": "punctuation.definition.comment.dm"
