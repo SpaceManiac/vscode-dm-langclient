@@ -129,6 +129,11 @@
 					"type": "boolean",
 					"default": null,
 					"description": "Whether to automatically reparse the environment on save."
+				},
+				"dreammaker.debugServerDll": {
+					"type": "string",
+					"default": null,
+					"description": "Path to a DLL to use for debugging. If unset, the bundled one will be used."
 				}
 			}
 		},
@@ -233,6 +238,14 @@
 						"name": "Launch DreamSeeker",
 						"preLaunchTask": "dm: build - ${command:CurrentDME}",
 						"dmb": "${workspaceFolder}/${command:CurrentDMB}"
+					},
+					{
+						"type": "byond",
+						"request": "launch",
+						"name": "Launch DreamDaemon",
+						"preLaunchTask": "dm: build - ${command:CurrentDME}",
+						"dmb": "${workspaceFolder}/${command:CurrentDMB}",
+						"dreamDaemon": true
 					}
 				],
 				"configurationSnippets": [
@@ -244,6 +257,17 @@
 							"name": "Launch DreamSeeker",
 							"preLaunchTask": "^\"dm: build - \\${command:CurrentDME}\"",
 							"dmb": "^\"\\${workspaceFolder}/\\${command:CurrentDMB}\""
+						}
+					},
+					{
+						"label": "BYOND: Launch DreamDaemon",
+						"body": {
+							"type": "byond",
+							"request": "launch",
+							"name": "Launch DreamDaemon",
+							"preLaunchTask": "^\"dm: build - \\${command:CurrentDME}\"",
+							"dmb": "^\"\\${workspaceFolder}/\\${command:CurrentDMB}\"",
+							"dreamDaemon": true
 						}
 					},
 					{
