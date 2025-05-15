@@ -21,7 +21,7 @@
             "include": "#comments"
         },
         {
-            "match": "\\b(var)[\\/ ](?:(static|global|tmp|const|final)\\/)?(?:(area|atom(?:/movable)?|client|database(?:/query)?|datum|exception|generator|icon|image|list|matrix|mob|mutable_appearance|obj|particles|regex|savefile|sound|turf|world)\\/)?(?:([a-zA-Z0-9_\\-$]*)\\/)*([A-Za-z0-9_$]*)\\b",
+            "match": "\\b(var)[\\/ ](?:(static|global|tmp|const|final)\\/)?(?:(area|atom(?:/movable)?|client|database(?:/query)?|datum|exception|generator|icon|image|a?list|matrix|mob|mutable_appearance|obj|particles|regex|savefile|sound|turf|world)\\/)?(?:([a-zA-Z0-9_\\-$]*)\\/)*([A-Za-z0-9_$]*)\\b",
             "name": "meta.initialization.dm",
             "captures": {
                 "1": {
@@ -59,7 +59,7 @@
             "name": "storage.modifier.dm"
         },
         {
-            "match": "(/)(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|list|matrix|mob|mutable_appearance|obj|particles|regex|savefile|sound|turf|world)\\b",
+            "match": "(/)(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|a?list|matrix|mob|mutable_appearance|obj|particles|regex|savefile|sound|turf|world)\\b",
             "captures": {
                 "1": {
                     "name": "keyword.operator.dm"
@@ -70,7 +70,7 @@
             }
         },
         {
-            "match": "(\\(|,)\\s*(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|list|matrix|mob|mutable_appearance|obj|particles|regex|savefile|sound|turf|world)(?=/)",
+            "match": "(\\(|,)\\s*(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|a?list|matrix|mob|mutable_appearance|obj|particles|regex|savefile|sound|turf|world)(?=/)",
             "captures": {
                 "1": {
                     "name": "keyword.operator.dm"
@@ -81,7 +81,7 @@
             }
         },
         {
-            "match": "\\b(list|call|input|locate|pick|arglist|CRASH|ASSERT|EXCEPTION|REGEX_QUOTE|REGEX_QUOTE_REPLACEMENT)(?>\\s*\\()",
+            "match": "\\b(a?list|call|input|locate|pick|arglist|CRASH|ASSERT|EXCEPTION|REGEX_QUOTE|REGEX_QUOTE_REPLACEMENT)(?>\\s*\\()",
             "captures": {
                 "1": {
                     "name": "support.function.dm"
