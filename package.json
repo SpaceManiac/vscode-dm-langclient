@@ -293,7 +293,7 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "rm -r dist && webpack --mode production",
+		"vscode:prepublish": "rm -rf dist && webpack --mode production",
 		"build": "webpack --mode none",
 		"watch": "webpack --mode none --watch"
 	},
