@@ -166,7 +166,7 @@ export async function activate(context: ExtensionContext) {
 	context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('byond', {
 		async createDebugAdapterDescriptor(session: vscode.DebugSession, executable: vscode.DebugAdapterExecutable | undefined): Promise<vscode.DebugAdapterDescriptor | null> {
 			if (!lc) {
-				return null;
+				throw new Error("BYOND debugging cannot start because the language client is not running.");
 			}
 
 			let dreamseeker_exe = await config.find_byond_file(session.configuration.dreamDaemon ? config.DREAM_DAEMON : config.DREAM_SEEKER);
@@ -176,7 +176,7 @@ export async function activate(context: ExtensionContext) {
 					dreamseeker_exe = "";
 				} else {
 					// We need to know the exe path to be able to launch.
-					return null;
+					throw new Error(`BYOND debugging cannot start because your Byond Path setting does not point to a ${session.configuration.dreamDaemon ? "DreamDaemon" : "DreamSeeker"} executable.`);
 				}
 			}
 
