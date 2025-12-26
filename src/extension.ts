@@ -183,6 +183,13 @@ export async function activate(context: ExtensionContext) {
 
 	// start the language client
 	await start_language_client_catch(context);
+
+	// Revert the "certificate is expired" hack.
+	// See https://github.com/SpaceManiac/SpacemanDMM/issues/298
+	if (workspace.getConfiguration('dreammaker').get<boolean>('httpSystemCertificatesHack')) {
+		await workspace.getConfiguration('http').update('systemCertificates', undefined, ConfigurationTarget.Global);
+		await workspace.getConfiguration('dreammaker').update('httpSystemCertificatesHack', undefined, ConfigurationTarget.Global);
+	}
 }
 
 async function update_ticked_status(editor?: TextEditor | undefined) {
@@ -395,19 +402,6 @@ async function prompt_for_server_command(context: ExtensionContext, message: str
 	return path;
 }
 
-async function cert_config_hack(): Promise<void> {
-	// See https://github.com/SpaceManiac/SpacemanDMM/issues/298
-	// and https://github.com/microsoft/vscode/issues/136787
-	if (workspace.getConfiguration('http').get<boolean>('systemCertificates')) {
-		// Set a sentinel so that we know that we set it rather than the user, and thus we can revert it later.
-		await workspace.getConfiguration('dreammaker').update('httpSystemCertificatesHack', true, ConfigurationTarget.Global);
-		await workspace.getConfiguration('http').update('systemCertificates', false, ConfigurationTarget.Global);
-		// Setting docs say that a window reload is required for it to take effect.
-		await vscode.commands.executeCommand('workbench.action.reloadWindow');
-	}
-	// Already tried applying the hack and it didn't work, so give up.
-}
-
 async function auto_update(context: ExtensionContext, platform: string, arch: string, out_file: string, hash: string | null): Promise<string | undefined> {
 	if (!await config.auto_update()) {
 		return "Auto-update disabled.";
@@ -423,10 +417,6 @@ async function auto_update(context: ExtensionContext, platform: string, arch: st
 		res = await fetch(url);
 	} catch (e) {
 		// network error
-		if (`${e}`.includes('certificate has expired')) {
-			// Reloads the window if it succeeds, returns if it doesn't.
-			await cert_config_hack();
-		}
 		return `${e}.`;
 	}
 	switch (res.status) {

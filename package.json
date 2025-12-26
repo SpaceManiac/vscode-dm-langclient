@@ -121,10 +121,6 @@
 					"default": null,
 					"description": "Whether the Object Tree pane should be loaded."
 				},
-				"dreammaker.httpSystemCertificatesHack": {
-					"type": "boolean",
-					"default": null
-				},
 				"dreammaker.reparseOnSave": {
 					"type": "boolean",
 					"default": null,
