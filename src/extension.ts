@@ -285,9 +285,7 @@ async function start_language_client(context: ExtensionContext) {
 	};
 
 	lc = new languageclient.LanguageClient('dm-langserver', "DreamMaker Language Server", serverOptions, clientOptions);
-	if (await config.object_tree_pane()) {
-		lc.registerFeature(new objtree.ObjectTreeFeature());
-	}
+	lc.registerFeature(new objtree.ObjectTreeFeature(await config.object_tree_pane()));
 	context.subscriptions.push(lc.start());
 	progress_counter();
 }

@@ -172,11 +172,18 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
 }
 
 export class ObjectTreeFeature implements StaticFeature {
+    // Control whether the old/slow method is allowed.
+    old: boolean;
+
+    constructor(old: boolean) {
+        this.old = old;
+    }
+
     fillClientCapabilities(capabilities: ClientCapabilities): void {
         let experimental: { dreammaker?: any } = (capabilities.experimental || (capabilities.experimental = {}));
         let dreammaker: any = (experimental.dreammaker || (experimental.dreammaker = {}));
         dreammaker.objectTree2 = true;
-        dreammaker.objectTree = true;
+        dreammaker.objectTree = this.old;
     }
 
     initialize(capabilities: ServerCapabilities, documentSelector: DocumentSelector | undefined): void {

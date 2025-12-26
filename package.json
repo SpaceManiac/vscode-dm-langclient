@@ -119,7 +119,8 @@
 				"dreammaker.objectTreePane": {
 					"type": "boolean",
 					"default": null,
-					"description": "Whether the Object Tree pane should be loaded."
+					"description": "Whether the Object Tree pane should be loaded.",
+					"deprecationMessage": "Only applies to old versions of the language server."
 				},
 				"dreammaker.reparseOnSave": {
 					"type": "boolean",
