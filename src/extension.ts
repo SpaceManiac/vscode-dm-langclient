@@ -61,7 +61,7 @@ export async function activate(context: ExtensionContext) {
 		return docs_provider.open_reference(dm_path);
 	}));
 
-	context.subscriptions.push(commands.registerCommand('dreammaker.findReferencesTree', async (element: extras.ObjectTreeEntry) => {
+	context.subscriptions.push(commands.registerCommand('dreammaker.objectTree.findReferences', async (element: extras.ObjectTreeEntry) => {
 		if (!element || !element.location) {
 			return;
 		}

@@ -77,8 +77,8 @@
 				"category": "DreamMaker"
 			},
 			{
-				"command": "dreammaker.findReferencesTree",
-				"title": "Find All References (Object Tree)",
+				"command": "dreammaker.objectTree.findReferences",
+				"title": "Find All References",
 				"category": "DreamMaker"
 			}
 		],
@@ -182,6 +182,7 @@
 				{
 					"id": "dreammaker-objtree",
 					"name": "Object Tree",
+					"icon": "media/dreammaker.svg",
 					"when": "dreammakerObjtreeReady"
 				}
 			]
@@ -189,8 +190,14 @@
 		"menus": {
 			"view/item/context": [
 				{
-					"command": "dreammaker.findReferencesTree",
+					"command": "dreammaker.objectTree.findReferences",
 					"when": "view == dreammaker-objtree && viewItem == symbol"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "dreammaker.objectTree.findReferences",
+					"when": "false"
 				}
 			]
 		},

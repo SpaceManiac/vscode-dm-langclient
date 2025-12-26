@@ -75,18 +75,21 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
                 item.collapsibleState = TreeItemCollapsibleState.Collapsed;
             }
             item.contextValue = 'symbol';
+            item.iconPath = new ThemeIcon('symbol-class');
         } else if (element.kind == SymbolKind.Field) {
             let field = element as ObjectTreeVar;
             if (field.is_declaration) {
                 item.description = "var";
             }
             item.contextValue = 'symbol';
+            item.iconPath = new ThemeIcon('symbol-field');
         } else if (element.kind == SymbolKind.Method || element.kind == SymbolKind.Constructor || element.kind == SymbolKind.Function) {
             let proc = element as ObjectTreeProc;
             if (proc.is_verb !== null) {
                 item.description = proc.is_verb ? "verb" : "proc";
             }
             item.contextValue = 'symbol';
+            item.iconPath = new ThemeIcon('symbol-method');
         }
 
         return item;
