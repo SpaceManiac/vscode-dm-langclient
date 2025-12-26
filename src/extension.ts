@@ -171,7 +171,13 @@ export async function activate(context: ExtensionContext) {
 
 			let dreamseeker_exe = await config.find_byond_file(session.configuration.dreamDaemon ? config.DREAM_DAEMON : config.DREAM_SEEKER);
 			if (!dreamseeker_exe) {
-				return null;
+				if (session.configuration.request === "attach") {
+					// Attaching doesn't actually need this, so punt.
+					dreamseeker_exe = "";
+				} else {
+					// We need to know the exe path to be able to launch.
+					return null;
+				}
 			}
 
 			let env = session.configuration.env;
