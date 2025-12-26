@@ -334,6 +334,10 @@ async function progress_counter() {
 		commands.executeCommand('setContext', 'dreammakerObjtreeReady', true);
 		objtree.get_provider().update(message);
 	});
+	lc.onNotification(extras.ObjectTree2, message => {
+		commands.executeCommand('setContext', 'dreammakerObjtreeReady', true);
+		objtree.get_provider().update2(lc, message);
+	});
 }
 
 async function determine_server_command(context: ExtensionContext): Promise<string | undefined> {

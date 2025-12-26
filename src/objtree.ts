@@ -1,7 +1,7 @@
-import { window, TreeDataProvider, TreeItem, ProviderResult, TreeItemCollapsibleState, DocumentSelector, Uri, ThemeIcon } from "vscode";
+import { window, TreeDataProvider, TreeItem, TreeItemCollapsibleState, DocumentSelector, Uri, ThemeIcon } from "vscode";
 import { Emitter } from "vscode-jsonrpc";
-import { StaticFeature, ClientCapabilities, ServerCapabilities, SymbolKind } from "vscode-languageclient";
-import { ObjectTreeParams, ObjectTreeEntry, ObjectTreeType, ObjectTreeVar, ObjectTreeProc } from "./extras";
+import { StaticFeature, ClientCapabilities, ServerCapabilities, SymbolKind, LanguageClient } from "vscode-languageclient";
+import { ObjectTreeParams, ObjectTreeEntry, ObjectTreeType, ObjectTreeVar, ObjectTreeProc, ObjectTree2Params, QueryObjectTree } from "./extras";
 
 let provider: TreeProvider;
 
@@ -38,9 +38,13 @@ class ProcsFolder implements ObjectTreeEntry {
 
 export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
     private data?: ObjectTreeParams;
+    private lc?: LanguageClient;
 
     private change_emitter = new Emitter<ObjectTreeEntry | undefined>();
     onDidChangeTreeData = this.change_emitter.event;
+
+    public show_vars = true;
+    public show_procs = true;
 
     getTreeItem(element: ObjectTreeEntry): TreeItem {
         let item: TreeItem = {
@@ -71,7 +75,11 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
             item.collapsibleState = TreeItemCollapsibleState.Collapsed;
         } else if (element.kind == SymbolKind.Class) {
             let type = element as ObjectTreeType;
-            if (type.vars.length || type.procs.length || type.children.length) {
+            if (
+                (this.show_vars && (type.n_vars ?? type.vars.length)) ||
+                (this.show_procs && (type.n_procs ?? type.procs.length)) ||
+                (type.n_children ?? type.children.length)
+            ) {
                 item.collapsibleState = TreeItemCollapsibleState.Collapsed;
             }
             item.contextValue = 'symbol';
@@ -95,36 +103,70 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
         return item;
     }
 
-    getChildren(element?: ObjectTreeEntry | undefined): ProviderResult<ObjectTreeEntry[]> {
-        if (!element) {
-            if (!this.data) {
+    async getChildren(element?: ObjectTreeEntry | undefined): Promise<ObjectTreeEntry[]> {
+        if (this.lc) {
+            if (!element) {
+                element = await this.lc.sendRequest(QueryObjectTree, { path: "" });
+                (element as ObjectTreeType).path ??= "";
+            } else if ('path' in element) {
+                let path = (element as ObjectTreeType).path;
+                element = await this.lc.sendRequest(QueryObjectTree, { path });
+                (element as ObjectTreeType).path ??= path;
+            }
+
+            if (element.kind == SymbolKind.Class) {
+                let type = element as ObjectTreeType;
+                let list: ObjectTreeEntry[] = [];
+                if (this.show_vars) {
+                    list.push(...type.vars);
+                }
+                if (this.show_procs) {
+                    list.push(...type.procs);
+                }
+                for (const child of type.children) {
+                    child.path ??= `${type.path ?? ""}/${child.name}`;
+                    list.push(child);
+                }
+                return list;
+            } else {
                 return [];
             }
-            element = this.data.root;
-        }
-
-        if (element instanceof VarsFolder) {
-            return element.type.vars;
-        } else if (element instanceof ProcsFolder) {
-            return element.type.procs;
-        } else if (element.kind == SymbolKind.Class) {
-            let type = element as ObjectTreeType;
-            let list: ObjectTreeEntry[] = [];
-            if (type.vars.length) {
-                list.push(new VarsFolder(type));
-            }
-            if (type.procs.length) {
-                list.push(new ProcsFolder(type));
-            }
-            list.push(...type.children);
-            return list;
         } else {
-            return [];
+            if (!element) {
+                if (!this.data) {
+                    return [];
+                }
+                element = this.data.root;
+            }
+
+            if (element instanceof VarsFolder) {
+                return element.type.vars;
+            } else if (element instanceof ProcsFolder) {
+                return element.type.procs;
+            } else if (element.kind == SymbolKind.Class) {
+                let type = element as ObjectTreeType;
+                let list: ObjectTreeEntry[] = [];
+                if (type.vars.length) {
+                    list.push(new VarsFolder(type));
+                }
+                if (type.procs.length) {
+                    list.push(new ProcsFolder(type));
+                }
+                list.push(...type.children);
+                return list;
+            } else {
+                return [];
+            }
         }
     }
 
     update(message: ObjectTreeParams) {
         this.data = message;
+        this.change_emitter.fire(undefined);
+    }
+
+    update2(lc: LanguageClient, message: ObjectTree2Params) {
+        this.lc = lc;
         this.change_emitter.fire(undefined);
     }
 }
@@ -133,6 +175,7 @@ export class ObjectTreeFeature implements StaticFeature {
     fillClientCapabilities(capabilities: ClientCapabilities): void {
         let experimental: { dreammaker?: any } = (capabilities.experimental || (capabilities.experimental = {}));
         let dreammaker: any = (experimental.dreammaker || (experimental.dreammaker = {}));
+        dreammaker.objectTree2 = true;
         dreammaker.objectTree = true;
     }
 
