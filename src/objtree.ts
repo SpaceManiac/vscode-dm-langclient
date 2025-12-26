@@ -36,6 +36,15 @@ class ProcsFolder implements ObjectTreeEntry {
     }
 }
 
+const kindToIcon = new Map<SymbolKind, ThemeIcon>([
+    [SymbolKind.Class, new ThemeIcon('symbol-class')],
+    [SymbolKind.Field, new ThemeIcon('symbol-field')],
+    [SymbolKind.Constant, new ThemeIcon('symbol-constant')],
+    [SymbolKind.Method, new ThemeIcon('symbol-method')],
+    [SymbolKind.Constructor, new ThemeIcon('symbol-constructor')],
+    [SymbolKind.Function, new ThemeIcon('symbol-function')],
+]);
+
 export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
     private data?: ObjectTreeParams;
     private lc?: LanguageClient;
@@ -49,7 +58,7 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
     getTreeItem(element: ObjectTreeEntry): TreeItem {
         let item: TreeItem = {
             label: element.name,
-            iconPath: element.location ? ThemeIcon.File : ThemeIcon.Folder,
+            iconPath: kindToIcon.get(element.kind) ?? (element.location ? ThemeIcon.File : ThemeIcon.Folder),
             collapsibleState: TreeItemCollapsibleState.None,
         };
 
@@ -83,21 +92,18 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
                 item.collapsibleState = TreeItemCollapsibleState.Collapsed;
             }
             item.contextValue = 'symbol';
-            item.iconPath = new ThemeIcon('symbol-class');
-        } else if (element.kind == SymbolKind.Field) {
+        } else if (element.kind == SymbolKind.Field || element.kind == SymbolKind.Constant) {
             let field = element as ObjectTreeVar;
             if (field.is_declaration) {
                 item.description = "var";
             }
             item.contextValue = 'symbol';
-            item.iconPath = new ThemeIcon('symbol-field');
         } else if (element.kind == SymbolKind.Method || element.kind == SymbolKind.Constructor || element.kind == SymbolKind.Function) {
             let proc = element as ObjectTreeProc;
             if (proc.is_verb !== null) {
                 item.description = proc.is_verb ? "verb" : "proc";
             }
             item.contextValue = 'symbol';
-            item.iconPath = new ThemeIcon('symbol-method');
         }
 
         return item;
