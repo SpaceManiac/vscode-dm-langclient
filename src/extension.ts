@@ -140,10 +140,8 @@ export async function activate(context: ExtensionContext) {
 	}));
 
 	context.subscriptions.push(workspace.onDidSaveTextDocument(async (event) => {
-		if (await config.reparse_on_save()) {
-			if (lc) {
-				lc.sendNotification(extras.Reparse, {});
-			}
+		if (event.languageId === "dm" && await config.reparse_on_save() && lc) {
+			lc.sendNotification(extras.Reparse, {});
 		}
 	}));
 
