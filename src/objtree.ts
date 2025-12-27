@@ -135,10 +135,18 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
                 let type = element as ObjectTreeType;
                 let list: ObjectTreeEntry[] = [];
                 if (this.show_vars && (type.path !== "" || this.show_datums)) {
-                    list.push(...(this.show_overrides ? type.vars : type.vars.filter(v => v.is_declaration)));
+                    let vars = type.vars;
+                    if (!this.show_overrides) {
+                        vars = vars.filter(v => v.is_declaration);
+                    }
+                    list.push(...vars);
                 }
                 if (this.show_procs && (type.path !== "" || this.show_datums)) {
-                    list.push(...(this.show_overrides ? type.procs : type.procs.filter(v => typeof v.is_verb === 'boolean')));
+                    let procs = type.procs;
+                    if (!this.show_overrides) {
+                        procs = procs.filter(v => typeof v.is_verb === 'boolean');
+                    }
+                    list.push(...procs);
                 }
                 if (type.path === "" && !this.show_datums) {
                     type.children = type.children
@@ -150,7 +158,7 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
                     list.push(child);
                 }
                 if (!this.show_builtins) {
-                    list = list.filter(n => !n.location?.uri.startsWith('dm://docs/reference.dm'));
+                    list = list.filter(n => ('n_children' in n && n.n_children) || !n.location?.uri.startsWith('dm://docs/reference.dm'));
                 }
                 return list;
             } else {
