@@ -79,7 +79,32 @@
 			{
 				"command": "dreammaker.objectTree.findReferences",
 				"title": "Find All References",
-				"category": "DreamMaker"
+				"category": "DreamMaker: Object Tree"
+			},
+			{
+				"command": "dreammaker.objectTree.showVars",
+				"title": "Toggle Vars",
+				"category": "DreamMaker: Object Tree"
+			},
+			{
+				"command": "dreammaker.objectTree.showProcs",
+				"title": "Toggle Procs",
+				"category": "DreamMaker: Object Tree"
+			},
+			{
+				"command": "dreammaker.objectTree.showOverrides",
+				"title": "Toggle Overrides",
+				"category": "DreamMaker: Object Tree"
+			},
+			{
+				"command": "dreammaker.objectTree.showBuiltins",
+				"title": "Toggle Builtins",
+				"category": "DreamMaker: Object Tree"
+			},
+			{
+				"command": "dreammaker.objectTree.showDatums",
+				"title": "Toggle Datums",
+				"category": "DreamMaker: Object Tree"
 			}
 		],
 		"keybindings": [
@@ -96,7 +121,7 @@
 				"dreammaker.autoUpdate": {
 					"type": "boolean",
 					"default": null,
-					"description": "Whether the language server should be automatically updated."
+					"description": "Automatically update the language server."
 				},
 				"dreammaker.langserverPath": {
 					"type": "string",
@@ -114,18 +139,43 @@
 				"dreammaker.tickOnCreate": {
 					"type": "boolean",
 					"default": null,
-					"description": "Whether to automatically tick created/untick deleted code files."
+					"description": "Automatically tick created/untick deleted code files."
 				},
 				"dreammaker.objectTreePane": {
 					"type": "boolean",
 					"default": null,
-					"description": "Whether the Object Tree pane should be loaded.",
+					"description": "Load the Object Tree pane.",
 					"deprecationMessage": "Only applies to old versions of the language server."
+				},
+				"dreammaker.objectTree.showVars": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show variables in the Object Tree."
+				},
+				"dreammaker.objectTree.showProcs": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show procs and verbs in the Object Tree."
+				},
+				"dreammaker.objectTree.showOverrides": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show overridden variables and procs in the Object Tree."
+				},
+				"dreammaker.objectTree.showBuiltins": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show builtin types, variables, and procs in the Object Tree."
+				},
+				"dreammaker.objectTree.showDatums": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show non-atom types in the Object Tree."
 				},
 				"dreammaker.reparseOnSave": {
 					"type": "boolean",
 					"default": null,
-					"description": "Whether to automatically reparse the environment on save."
+					"description": "Automatically reparse the environment on save."
 				},
 				"dreammaker.debugServerDll": {
 					"type": "string",
@@ -185,6 +235,28 @@
 			]
 		},
 		"menus": {
+			"view/title": [
+				{
+					"command": "dreammaker.objectTree.showVars",
+					"when": "view == dreammaker-objtree"
+				},
+				{
+					"command": "dreammaker.objectTree.showProcs",
+					"when": "view == dreammaker-objtree"
+				},
+				{
+					"command": "dreammaker.objectTree.showOverrides",
+					"when": "view == dreammaker-objtree"
+				},
+				{
+					"command": "dreammaker.objectTree.showBuiltins",
+					"when": "view == dreammaker-objtree"
+				},
+				{
+					"command": "dreammaker.objectTree.showDatums",
+					"when": "view == dreammaker-objtree"
+				}
+			],
 			"view/item/context": [
 				{
 					"command": "dreammaker.objectTree.findReferences",

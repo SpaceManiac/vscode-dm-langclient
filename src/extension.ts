@@ -74,6 +74,18 @@ export async function activate(context: ExtensionContext) {
 		return await commands.executeCommand("references-view.find", uri, position);
 	}));
 
+	function toggleObjectTree(key: string) {
+		context.subscriptions.push(commands.registerCommand(`dreammaker.objectTree.${key}`, async () => {
+			const c = workspace.getConfiguration("dreammaker.objectTree");
+			c.update(key, !c.get(key, false), ConfigurationTarget.Global);
+		}));
+	}
+	toggleObjectTree("showVars");
+	toggleObjectTree("showProcs");
+	toggleObjectTree("showOverrides");
+	toggleObjectTree("showBuiltins");
+	toggleObjectTree("showDatums");
+
 	context.subscriptions.push(commands.registerCommand('dreammaker.getFilenameDme', () => {
 		return environment_file;
 	}));
@@ -287,10 +299,10 @@ async function start_language_client(context: ExtensionContext) {
 	lc = new languageclient.LanguageClient('dm-langserver', "DreamMaker Language Server", serverOptions, clientOptions);
 	lc.registerFeature(new objtree.ObjectTreeFeature(await config.object_tree_pane()));
 	context.subscriptions.push(lc.start());
-	progress_counter();
+	progress_counter(context);
 }
 
-async function progress_counter() {
+async function progress_counter(context: ExtensionContext) {
 	let environment = "DM";
 
 	await lc.onReady();
@@ -330,11 +342,11 @@ async function progress_counter() {
 	});
 	lc.onNotification(extras.ObjectTree, message => {
 		commands.executeCommand('setContext', 'dreammakerObjtreeReady', true);
-		objtree.get_provider().update(message);
+		objtree.get_provider(context).update(message);
 	});
 	lc.onNotification(extras.ObjectTree2, message => {
 		commands.executeCommand('setContext', 'dreammakerObjtreeReady', true);
-		objtree.get_provider().update2(lc, message);
+		objtree.get_provider(context).update2(lc, message);
 	});
 }
 

@@ -1,17 +1,18 @@
-import { window, TreeDataProvider, TreeItem, TreeItemCollapsibleState, DocumentSelector, Uri, ThemeIcon } from "vscode";
+import { window, TreeDataProvider, TreeItem, TreeItemCollapsibleState, DocumentSelector, Uri, ThemeIcon, workspace, ConfigurationChangeEvent, ExtensionContext } from "vscode";
 import { Emitter } from "vscode-jsonrpc";
 import { StaticFeature, ClientCapabilities, ServerCapabilities, SymbolKind, LanguageClient } from "vscode-languageclient";
 import { ObjectTreeParams, ObjectTreeEntry, ObjectTreeType, ObjectTreeVar, ObjectTreeProc, ObjectTree2Params, QueryObjectTree } from "./extras";
 
 let provider: TreeProvider;
 
-export function get_provider(): TreeProvider {
+export function get_provider(context: ExtensionContext): TreeProvider {
     if (!provider) {
         provider = new TreeProvider();
-        window.createTreeView("dreammaker-objtree", {
+        context.subscriptions.push(window.createTreeView("dreammaker-objtree", {
             showCollapseAll: true,
             treeDataProvider: provider,
-        });
+        }));
+        context.subscriptions.push(workspace.onDidChangeConfiguration(e => provider.onConfigChange(e)));
     }
     return provider;
 }
@@ -36,7 +37,7 @@ class ProcsFolder implements ObjectTreeEntry {
     }
 }
 
-const kindToIcon = new Map<SymbolKind, ThemeIcon>([
+const kindToIcon: ReadonlyMap<SymbolKind, ThemeIcon> = new Map<SymbolKind, ThemeIcon>([
     [SymbolKind.Class, new ThemeIcon('symbol-class')],
     [SymbolKind.Field, new ThemeIcon('symbol-field')],
     [SymbolKind.Constant, new ThemeIcon('symbol-constant')],
@@ -45,6 +46,13 @@ const kindToIcon = new Map<SymbolKind, ThemeIcon>([
     [SymbolKind.Function, new ThemeIcon('symbol-function')],
 ]);
 
+const atomOrder = {
+    "area": 0,
+    "turf": 1,
+    "obj": 2,
+    "mob": 3,
+} as const;
+
 export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
     private data?: ObjectTreeParams;
     private lc?: LanguageClient;
@@ -52,8 +60,11 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
     private change_emitter = new Emitter<ObjectTreeEntry | undefined>();
     onDidChangeTreeData = this.change_emitter.event;
 
-    public show_vars = true;
-    public show_procs = true;
+    private show_vars = false;
+    private show_procs = false;
+    private show_builtins = false;
+    private show_overrides = false;
+    private show_datums = false;
 
     getTreeItem(element: ObjectTreeEntry): TreeItem {
         let item: TreeItem = {
@@ -123,15 +134,23 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
             if (element.kind == SymbolKind.Class) {
                 let type = element as ObjectTreeType;
                 let list: ObjectTreeEntry[] = [];
-                if (this.show_vars) {
-                    list.push(...type.vars);
+                if (this.show_vars && (type.path !== "" || this.show_datums)) {
+                    list.push(...(this.show_overrides ? type.vars : type.vars.filter(v => v.is_declaration)));
                 }
-                if (this.show_procs) {
-                    list.push(...type.procs);
+                if (this.show_procs && (type.path !== "" || this.show_datums)) {
+                    list.push(...(this.show_overrides ? type.procs : type.procs.filter(v => typeof v.is_verb === 'boolean')));
+                }
+                if (type.path === "" && !this.show_datums) {
+                    type.children = type.children
+                        .filter(n => n.name in atomOrder)
+                        .sort((a, b) => atomOrder[a.name as keyof typeof atomOrder] - atomOrder[b.name as keyof typeof atomOrder]);
                 }
                 for (const child of type.children) {
                     child.path ??= `${type.path ?? ""}/${child.name}`;
                     list.push(child);
+                }
+                if (!this.show_builtins) {
+                    list = list.filter(n => !n.location?.uri.startsWith('dm://docs/reference.dm'));
                 }
                 return list;
             } else {
@@ -173,7 +192,22 @@ export class TreeProvider implements TreeDataProvider<ObjectTreeEntry> {
 
     update2(lc: LanguageClient, message: ObjectTree2Params) {
         this.lc = lc;
+        this.configure();
+    }
+
+    configure() {
+        this.show_vars = workspace.getConfiguration("dreammaker.objectTree").get("showVars", false);
+        this.show_procs = workspace.getConfiguration("dreammaker.objectTree").get("showProcs", false);
+        this.show_overrides = workspace.getConfiguration("dreammaker.objectTree").get("showOverrides", false);
+        this.show_builtins = workspace.getConfiguration("dreammaker.objectTree").get("showBuiltins", false);
+        this.show_datums = workspace.getConfiguration("dreammaker.objectTree").get("showDatums", false);
         this.change_emitter.fire(undefined);
+    }
+
+    onConfigChange(e: ConfigurationChangeEvent) {
+        if (e.affectsConfiguration("dreammaker.objectTree")) {
+            this.configure();
+        }
     }
 }
 
