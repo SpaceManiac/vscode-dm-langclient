@@ -74,17 +74,19 @@ export async function activate(context: ExtensionContext) {
 		return await commands.executeCommand("references-view.find", uri, position);
 	}));
 
-	function toggleObjectTree(key: string) {
-		context.subscriptions.push(commands.registerCommand(`dreammaker.objectTree.${key}`, async () => {
-			const c = workspace.getConfiguration("dreammaker.objectTree");
-			c.update(key, !c.get(key, false), ConfigurationTarget.Global);
+	function toggleObjectTree(show: string, hide: string) {
+		context.subscriptions.push(commands.registerCommand(`dreammaker.objectTree.${show}`, async () => {
+			workspace.getConfiguration("dreammaker.objectTree").update(show, true, ConfigurationTarget.Global);
+		}));
+		context.subscriptions.push(commands.registerCommand(`dreammaker.objectTree.${hide}`, async () => {
+			workspace.getConfiguration("dreammaker.objectTree").update(show, false, ConfigurationTarget.Global);
 		}));
 	}
-	toggleObjectTree("showVars");
-	toggleObjectTree("showProcs");
-	toggleObjectTree("showOverrides");
-	toggleObjectTree("showBuiltins");
-	toggleObjectTree("showDatums");
+	toggleObjectTree("showVars", "hideVars");
+	toggleObjectTree("showProcs", "hideProcs");
+	toggleObjectTree("showOverrides", "hideOverrides");
+	toggleObjectTree("showBuiltins", "hideBuiltins");
+	toggleObjectTree("showDatums", "hideDatums");
 
 	context.subscriptions.push(commands.registerCommand('dreammaker.getFilenameDme', () => {
 		return environment_file;

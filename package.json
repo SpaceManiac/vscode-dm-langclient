@@ -83,27 +83,52 @@
 			},
 			{
 				"command": "dreammaker.objectTree.showVars",
-				"title": "Toggle Vars",
+				"title": "Show Vars",
 				"category": "DreamMaker: Object Tree"
 			},
 			{
 				"command": "dreammaker.objectTree.showProcs",
-				"title": "Toggle Procs",
+				"title": "Show Procs",
 				"category": "DreamMaker: Object Tree"
 			},
 			{
 				"command": "dreammaker.objectTree.showOverrides",
-				"title": "Toggle Overrides",
+				"title": "Show Overrides",
 				"category": "DreamMaker: Object Tree"
 			},
 			{
 				"command": "dreammaker.objectTree.showBuiltins",
-				"title": "Toggle Builtins",
+				"title": "Show Builtins",
 				"category": "DreamMaker: Object Tree"
 			},
 			{
 				"command": "dreammaker.objectTree.showDatums",
-				"title": "Toggle Datums",
+				"title": "Show Datums",
+				"category": "DreamMaker: Object Tree"
+			},
+			{
+				"command": "dreammaker.objectTree.hideVars",
+				"title": "Hide Vars",
+				"category": "DreamMaker: Object Tree"
+			},
+			{
+				"command": "dreammaker.objectTree.hideProcs",
+				"title": "Hide Procs",
+				"category": "DreamMaker: Object Tree"
+			},
+			{
+				"command": "dreammaker.objectTree.hideOverrides",
+				"title": "Hide Overrides",
+				"category": "DreamMaker: Object Tree"
+			},
+			{
+				"command": "dreammaker.objectTree.hideBuiltins",
+				"title": "Hide Builtins",
+				"category": "DreamMaker: Object Tree"
+			},
+			{
+				"command": "dreammaker.objectTree.hideDatums",
+				"title": "Hide Datums",
 				"category": "DreamMaker: Object Tree"
 			}
 		],
@@ -238,23 +263,53 @@
 			"view/title": [
 				{
 					"command": "dreammaker.objectTree.showVars",
-					"when": "view == dreammaker-objtree"
+					"when": "view == dreammaker-objtree && !config.dreammaker.objectTree.showVars",
+					"group": "showhide@1"
+				},
+				{
+					"command": "dreammaker.objectTree.hideVars",
+					"when": "view == dreammaker-objtree && config.dreammaker.objectTree.showVars",
+					"group": "showhide@1"
 				},
 				{
 					"command": "dreammaker.objectTree.showProcs",
-					"when": "view == dreammaker-objtree"
+					"when": "view == dreammaker-objtree && !config.dreammaker.objectTree.showProcs",
+					"group": "showhide@2"
+				},
+				{
+					"command": "dreammaker.objectTree.hideProcs",
+					"when": "view == dreammaker-objtree && config.dreammaker.objectTree.showProcs",
+					"group": "showhide@2"
 				},
 				{
 					"command": "dreammaker.objectTree.showOverrides",
-					"when": "view == dreammaker-objtree"
+					"when": "view == dreammaker-objtree && !config.dreammaker.objectTree.showOverrides",
+					"group": "showhide@3"
+				},
+				{
+					"command": "dreammaker.objectTree.hideOverrides",
+					"when": "view == dreammaker-objtree && config.dreammaker.objectTree.showOverrides",
+					"group": "showhide@3"
 				},
 				{
 					"command": "dreammaker.objectTree.showBuiltins",
-					"when": "view == dreammaker-objtree"
+					"when": "view == dreammaker-objtree && !config.dreammaker.objectTree.showBuiltins",
+					"group": "showhide@4"
+				},
+				{
+					"command": "dreammaker.objectTree.hideBuiltins",
+					"when": "view == dreammaker-objtree && config.dreammaker.objectTree.showBuiltins",
+					"group": "showhide@4"
 				},
 				{
 					"command": "dreammaker.objectTree.showDatums",
-					"when": "view == dreammaker-objtree"
+					"when": "view == dreammaker-objtree && !config.dreammaker.objectTree.showDatums",
+					"group": "showhide@5"
+				},
+				{
+					"command": "dreammaker.objectTree.hideDatums",
+					"when": "view == dreammaker-objtree && config.dreammaker.objectTree.showDatums",
+					"group": "showhide@5"
 				}
 			],
 			"view/item/context": [
