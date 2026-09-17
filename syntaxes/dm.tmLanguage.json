@@ -21,7 +21,7 @@
             "include": "#comments"
         },
         {
-            "match": "\\b(var)[\\/ ](?:(static|global|tmp|const|final)\\/)?(?:(area|atom(?:/movable)?|client|database(?:/query)?|datum|exception|generator|icon|image|a?list|matrix|mob|mutable_appearance|obj|particles|pixloc|regex|savefile|sound|turf|vector|world)\\/)?(?:([a-zA-Z0-9_\\-$]*)\\/)*([A-Za-z0-9_$]*)\\b",
+            "match": "\\b(var)[\\/ ](?:(static|global|tmp|const|final)\\/)?(?:(area|atom(?:\/movable)?|client|database(?:\/query)?|datum|exception|generator|icon|image|a?list|matrix|mob|mutable_appearance|obj|particles|pixloc|regex|savefile|sound|turf|vector|world)\\/)?\\b",
             "name": "meta.initialization.dm",
             "captures": {
                 "1": {
@@ -32,9 +32,6 @@
                 },
                 "3": {
                     "name": "support.class.dm"
-                },
-                "5": {
-                    "name": "variable.other.dm"
                 }
             }
         },
@@ -55,7 +52,7 @@
             "name": "storage.type.dm"
         },
         {
-            "match": "\\b(as|const|global|set|static|tmp|final)\\b",
+            "match": "\\b(as|in|const|global|set|static|tmp|final)\\b",
             "name": "storage.modifier.dm"
         },
         {
@@ -384,6 +381,22 @@
                     "include": "#block"
                 }
             ]
+        },
+        {
+            "match": "\\b(\\w+)(?>\\s*\\()",
+            "name": "entity.name.function.dm"
+        },
+        {
+            "match": "(\\w+)(?=\\/)",
+            "captures":{
+                "1":{
+                "name": "support.class.dm"
+                }
+            }
+        },
+        {
+            "match": "\\w+",
+            "name": "variable.dm"
         }
     ],
     "repository": {
