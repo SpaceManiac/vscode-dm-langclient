@@ -21,7 +21,7 @@
             "include": "#comments"
         },
         {
-            "match": "\\b(var)[\\/ ](?:(static|global|tmp|const|final)\\/)?(?:(area|atom(?:\/movable)?|client|database(?:\/query)?|datum|exception|generator|icon|image|a?list|matrix|mob|mutable_appearance|obj|particles|pixloc|regex|savefile|sound|turf|vector|world)\\/)?\\b",
+            "match": "\\b(var)[\\/](?:(static|global|tmp|const|final)\\/)?((?:(?:\\w+)\\/)*)(\\w+)\\b",
             "name": "meta.initialization.dm",
             "captures": {
                 "1": {
@@ -32,6 +32,9 @@
                 },
                 "3": {
                     "name": "support.class.dm"
+                },
+                "4": {
+                    "name": "variable.dm"
                 }
             }
         },
