@@ -59,28 +59,6 @@
             "name": "storage.modifier.dm"
         },
         {
-            "match": "(/)(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|a?list|matrix|mob|mutable_appearance|obj|particles|pixloc|regex|savefile|sound|turf|vector|world)\\b",
-            "captures": {
-                "1": {
-                    "name": "keyword.operator.dm"
-                },
-                "2": {
-                    "name": "support.class.dm"
-                }
-            }
-        },
-        {
-            "match": "(\\(|,)\\s*(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|a?list|matrix|mob|mutable_appearance|obj|particles|pixloc|regex|savefile|sound|turf|vector|world)(?=/)",
-            "captures": {
-                "1": {
-                    "name": "keyword.operator.dm"
-                },
-                "2": {
-                    "name": "support.class.dm"
-                }
-            }
-        },
-        {
             "match": "\\b(a?list|call|input|locate|pick|arglist|CRASH|ASSERT|EXCEPTION|REGEX_QUOTE|REGEX_QUOTE_REPLACEMENT)(?>\\s*\\()",
             "captures": {
                 "1": {
@@ -91,10 +69,6 @@
         {
             "match": "\\b(usr|world|src|args|vars)\\b",
             "name": "variable.language.dm"
-        },
-        {
-            "match": "(\\?|(>|<)(=)?|\\.|:|/(=)?|~|\\+(\\+|=)?|-(-|=)?|\\*(\\*|=)?|%|>>|<<|=(=)?|!(=)?|<>|&|&&|\\^|\\||\\|\\||\\b(to|in|step)\\b)",
-            "name": "keyword.operator.dm"
         },
         {
             "match": "\\b(DM_BUILD|DM_VERSION|__FILE__|__LINE__|__MAIN__|DEBUG|FILE_DIR|TRUE|FALSE)\\b",
@@ -390,12 +364,21 @@
             "name": "entity.name.function.dm"
         },
         {
-            "match": "(\\w+)(?=\\/)",
+            "match": "\\B(?:\\/)(?:\\w+)(?:(?:\\/)(?:\\w+))+\\b(?!\\()",
+            "name": "support.class.dm"
+        },
+        {
+            "match": "(?:\\w+)(?:(?:\\/)(?:\\w+))*\\/(\\w+)",
+            "name": "support.class.dm",
             "captures":{
                 "1":{
-                "name": "support.class.dm"
+                    "name":"variable.dm"
                 }
             }
+        },
+        {
+            "match": "(\\?|(>|<)(=)?|\\.|:|/(=)?|~|\\+(\\+|=)?|-(-|=)?|\\*(\\*|=)?|%|>>|<<|=(=)?|!(=)?|<>|&|&&|\\^|\\||\\|\\||\\b(to|in|step)\\b)",
+            "name": "keyword.operator.dm"
         },
         {
             "match": "\\w+",
