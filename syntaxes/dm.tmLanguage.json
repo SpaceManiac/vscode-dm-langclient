@@ -364,6 +364,15 @@
             "name": "entity.name.function.dm"
         },
         {
+            "match": "\\B(?:\\/)(?:\\w+)(?:(?:\\/)(?:\\w+))+\\/(proc\\b)",
+            "name": "support.class.dm",
+            "captures": {
+                "1": {
+                    "name": "storage.type.dm"
+                }
+            }
+        },
+        {
             "match": "\\B(?:\\/)(?:\\w+)(?:(?:\\/)(?:\\w+))+\\b(?!\\()",
             "name": "support.class.dm"
         },
