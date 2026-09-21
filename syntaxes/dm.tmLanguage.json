@@ -51,7 +51,7 @@
             "name": "keyword.other.dm"
         },
         {
-            "match": "\\b(proc|verb|operator)\\b",
+            "match": "\\b(var|proc|verb|operator)\\b",
             "name": "storage.type.dm"
         },
         {
