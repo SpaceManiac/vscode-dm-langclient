@@ -55,6 +55,17 @@
             "name": "storage.type.dm"
         },
         {
+            "match": "(PROC_REF)\\((\\w+)",
+            "captures":{
+                "1": {
+                    "name":"constant.language.dm"
+                },
+                "2":{
+                    "name":"support.function.dm"
+                }
+            }
+        },
+        {
             "match": "\\b(as|in|const|global|set|static|tmp|final)\\b",
             "name": "storage.modifier.dm"
         },
