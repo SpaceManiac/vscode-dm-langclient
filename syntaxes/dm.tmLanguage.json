@@ -21,7 +21,7 @@
             "include": "#comments"
         },
         {
-            "match": "\\b(var)[\\/ ](?:(static|global|tmp|const|final)\\/)?(?:(area|atom(?:/movable)?|client|database(?:/query)?|datum|exception|generator|icon|image|a?list|matrix|mob|mutable_appearance|obj|particles|pixloc|regex|savefile|sound|turf|vector|world)\\/)?(?:([a-zA-Z0-9_\\-$]*)\\/)*([A-Za-z0-9_$]*)\\b",
+            "match": "\\b(var)[\\/](?:(static|global|tmp|const|final)\\/)?((?:(?:\\w+)\\/)*)(\\w+)\\b",
             "name": "meta.initialization.dm",
             "captures": {
                 "1": {
@@ -33,8 +33,8 @@
                 "3": {
                     "name": "support.class.dm"
                 },
-                "5": {
-                    "name": "variable.other.dm"
+                "4": {
+                    "name": "variable.dm"
                 }
             }
         },
@@ -51,34 +51,23 @@
             "name": "keyword.other.dm"
         },
         {
-            "match": "\\b(proc|verb|operator)\\b",
+            "match": "\\b(var|proc|verb|operator)\\b",
             "name": "storage.type.dm"
         },
         {
-            "match": "\\b(as|const|global|set|static|tmp|final)\\b",
+            "match": "(PROC_REF)\\((\\w+)",
+            "captures":{
+                "1": {
+                    "name":"constant.language.dm"
+                },
+                "2":{
+                    "name":"support.function.dm"
+                }
+            }
+        },
+        {
+            "match": "\\b(as|in|const|global|set|static|tmp|final)\\b",
             "name": "storage.modifier.dm"
-        },
-        {
-            "match": "(/)(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|a?list|matrix|mob|mutable_appearance|obj|particles|pixloc|regex|savefile|sound|turf|vector|world)\\b",
-            "captures": {
-                "1": {
-                    "name": "keyword.operator.dm"
-                },
-                "2": {
-                    "name": "support.class.dm"
-                }
-            }
-        },
-        {
-            "match": "(\\(|,)\\s*(area|atom(/movable)?|client|database(/query)?|datum|exception|generator|icon|image|a?list|matrix|mob|mutable_appearance|obj|particles|pixloc|regex|savefile|sound|turf|vector|world)(?=/)",
-            "captures": {
-                "1": {
-                    "name": "keyword.operator.dm"
-                },
-                "2": {
-                    "name": "support.class.dm"
-                }
-            }
         },
         {
             "match": "\\b(a?list|call|input|locate|pick|arglist|CRASH|ASSERT|EXCEPTION|REGEX_QUOTE|REGEX_QUOTE_REPLACEMENT)(?>\\s*\\()",
@@ -91,10 +80,6 @@
         {
             "match": "\\b(usr|world|src|args|vars)\\b",
             "name": "variable.language.dm"
-        },
-        {
-            "match": "(\\?|(>|<)(=)?|\\.|:|/(=)?|~|\\+(\\+|=)?|-(-|=)?|\\*(\\*|=)?|%|>>|<<|=(=)?|!(=)?|<>|&|&&|\\^|\\||\\|\\||\\b(to|in|step)\\b)",
-            "name": "keyword.operator.dm"
         },
         {
             "match": "\\b(DM_BUILD|DM_VERSION|__FILE__|__LINE__|__MAIN__|DEBUG|FILE_DIR|TRUE|FALSE)\\b",
@@ -384,6 +369,40 @@
                     "include": "#block"
                 }
             ]
+        },
+        {
+            "match": "\\b(\\w+)(?>\\s*\\()",
+            "name": "entity.name.function.dm"
+        },
+        {
+            "match": "\\B(?:\\/)(?:\\w+)(?:(?:\\/)(?:\\w+))+\\/(proc\\b)",
+            "name": "support.class.dm",
+            "captures": {
+                "1": {
+                    "name": "storage.type.dm"
+                }
+            }
+        },
+        {
+            "match": "\\B(?:\\/)(?:\\w+)(?:(?:\\/)(?:\\w+))+\\b(?!\\()",
+            "name": "support.class.dm"
+        },
+        {
+            "match": "(?:\\w+)(?:(?:\\/)(?:\\w+))*\\/(\\w+)",
+            "name": "support.class.dm",
+            "captures":{
+                "1":{
+                    "name":"variable.dm"
+                }
+            }
+        },
+        {
+            "match": "(\\?|(>|<)(=)?|\\.|:|/(=)?|~|\\+(\\+|=)?|-(-|=)?|\\*(\\*|=)?|%|>>|<<|=(=)?|!(=)?|<>|&|&&|\\^|\\||\\|\\||\\b(to|in|step)\\b)",
+            "name": "keyword.operator.dm"
+        },
+        {
+            "match": "\\w+",
+            "name": "variable.dm"
         }
     ],
     "repository": {
