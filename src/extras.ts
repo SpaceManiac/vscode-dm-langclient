@@ -66,3 +66,8 @@ export interface StartDebuggerParams {
 export interface StartDebuggerResult {
     port: number,
 }
+
+// ----------------------------------------------------------------------------
+// ExpandMacros
+// params, result, error, registration options
+export const ExpandMacros: RequestType<{ uri: string }, string, void, void> = new RequestType('experimental/dreammaker/expandMacros');

@@ -32,6 +32,7 @@
 		"onCommand:dreammaker.findReferencesTree",
 		"onCommand:dreammaker.returnDreamdaemonPath",
 		"onCommand:dreammaker.reparse",
+		"onCommand:dreammaker.previewMacros",
 		"onDebugResolve:byond"
 	],
 	"main": "./dist/extension",
@@ -80,6 +81,11 @@
 				"command": "dreammaker.objectTree.findReferences",
 				"title": "Find All References",
 				"category": "DreamMaker: Object Tree"
+			},
+			{
+				"command": "dreammaker.previewMacros",
+				"title": "Preview Macro Expansion",
+				"category": "DreamMaker"
 			},
 			{
 				"command": "dreammaker.objectTree.showVars",
@@ -137,6 +143,11 @@
 				"command": "dreammaker.restartLangserver",
 				"key": "alt+f5",
 				"when": "editorLangId == 'dm'"
+			},
+			{
+				"command": "dreammaker.previewMacros",
+				"key": "ctrl+shift+v",
+				"when": "editorLangId == 'dm' && editorTextFocus"
 			}
 		],
 		"configuration": {
@@ -201,6 +212,11 @@
 					"type": "boolean",
 					"default": null,
 					"description": "Automatically reparse the environment on save."
+				},
+				"dreammaker.autoRefreshMacroPreview": {
+					"type": "boolean",
+					"default": true,
+					"description": "Automatically refresh open macro expansion previews on .dm edits."
 				},
 				"dreammaker.debugServerDll": {
 					"type": "string",
