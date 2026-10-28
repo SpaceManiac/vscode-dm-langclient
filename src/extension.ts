@@ -3,7 +3,7 @@
 
 import * as os from 'os';
 import * as fs from 'fs';
-import { workspace, window, commands, ExtensionContext, StatusBarItem, StatusBarAlignment, Uri, TextEditor, ConfigurationTarget, Position } from 'vscode';
+import { workspace, window, commands, ExtensionContext, StatusBarItem, StatusBarAlignment, Uri, TextEditor, ConfigurationTarget, Position, EventEmitter, ViewColumn } from 'vscode';
 import * as vscode from 'vscode';
 import * as languageclient from 'vscode-languageclient';
 import fetch from 'node-fetch';
@@ -104,6 +104,40 @@ export async function activate(context: ExtensionContext) {
 		if (lc) {
 			lc.sendNotification(extras.Reparse, {});
 		}
+	}));
+
+	// Each macro expansion preview is a virtual document with the source in its query string
+	const expanded_scheme = 'dm-expanded-macros';
+	const expanded_changed = new EventEmitter<Uri>();
+	const open_previews = new Set<string>();
+	context.subscriptions.push(workspace.registerTextDocumentContentProvider(expanded_scheme, {
+		onDidChange: expanded_changed.event,
+		provideTextDocumentContent: (uri: Uri) => {
+			open_previews.add(uri.toString());
+			return lc.sendRequest(extras.ExpandMacros, { uri: uri.query });
+		},
+	}));
+	// Any file could affect our preview, so refresh on any .dm edit
+	let expanded_timer: NodeJS.Timeout | undefined;
+	context.subscriptions.push(workspace.onDidChangeTextDocument((event) => {
+		const auto_refresh = workspace.getConfiguration('dreammaker').get<boolean>('autoRefreshMacroPreview');
+		if (event.document.languageId !== 'dm' || !auto_refresh || expanded_timer) {
+			return;
+		}
+		// Refresh at most once per window while typing (just like markdown preview)
+		expanded_timer = setTimeout(() => {
+			expanded_timer = undefined;
+			open_previews.forEach((uri) => expanded_changed.fire(Uri.parse(uri)));
+		}, 300);
+	}));
+	context.subscriptions.push(commands.registerCommand('dreammaker.previewMacros', async () => {
+		const source = window.activeTextEditor?.document;
+		if (!lc || source?.languageId !== 'dm' || source.uri.scheme === expanded_scheme) {
+			return;
+		}
+		const uri = source.uri.with({ scheme: expanded_scheme, query: source.uri.toString() });
+		expanded_changed.fire(uri);  // an already-open preview is stale
+		await window.showTextDocument(await workspace.openTextDocument(uri), { viewColumn: ViewColumn.Beside, preview: true });
 	}));
 
 	// register the docs provider
